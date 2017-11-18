@@ -7,8 +7,8 @@ BuildParameters.SetParameters(context: Context,
                             title: "patriksvensson.se",
                             repositoryOwner: "patriksvensson",
                             repositoryName: "blog",
-                            appVeyorAccountName: "patrik",
-                            webHost: "patriksvensson.se",
+                            appVeyorAccountName: "patriksvensson",
+                            webHost: "patriksvensson.se/blog",
                             shouldPurgeCloudflareCache: true);
 
 BuildParameters.PrintParameters(Context);
