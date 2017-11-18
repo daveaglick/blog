@@ -4,7 +4,7 @@
 	<id>http://patriksvensson.se/</id>
 	<title>Patrik Svensson</title>
 	<rights>2017</rights>
-	<updated>2017-11-18T10:17:45Z</updated>
+	<updated>2017-11-18T10:31:19Z</updated>
 	<subtitle>Patrik Svensson</subtitle>
 	<entry>
 		<link href="http://patriksvensson.se/2017/11/using-embedded-resources-in-xunit-tests" />
@@ -14,7 +14,7 @@
 		<content>&lt;p&gt;I was reading &lt;a href="https://andrewlock.net"&gt;Andrew Lock&lt;/a&gt;'s excellent blog post about
 &lt;a href="https://andrewlock.net/creating-parameterised-tests-in-xunit-with-inlinedata-classdata-and-memberdata"&gt;Creating parameterised tests in xUnit&lt;/a&gt;
 when I remembered something I wrote a while back that has proven to be quite useful.&lt;/p&gt;
-&lt;p&gt;The code in questions allows you to use embedded resources with &lt;a href="https://xunit.github.io/docs/getting-started-desktop.html#write-first-theory"&gt;xUnit's theory concept&lt;/a&gt;
+&lt;p&gt;The code in question allows you to use embedded resources with &lt;a href="https://xunit.github.io/docs/getting-started-desktop.html#write-first-theory"&gt;xUnit's theory concept&lt;/a&gt;
 (which is similar to a &lt;code&gt;TestCase&lt;/code&gt; in NUnit).&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-csharp"&gt;using System;
 using System.Collections.Generic;
