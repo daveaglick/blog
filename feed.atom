@@ -1,0 +1,555 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<link rel="self" href="http://patriksvensson.se/" />
+	<id>http://patriksvensson.se/</id>
+	<title>Patrik Svensson</title>
+	<rights>2017</rights>
+	<updated>2017-11-18T03:57:02Z</updated>
+	<subtitle>Patrik Svensson</subtitle>
+	<entry>
+		<link href="http://patriksvensson.se/2017/11/using-embedded-resources-in-xunit-tests" />
+		<id>http://patriksvensson.se/2017/11/using-embedded-resources-in-xunit-tests</id>
+		<title>Using embedded resources in xUnit tests</title>
+		<updated>2017-11-11T00:00:00Z</updated>
+		<content>&lt;p&gt;I was reading &lt;a href="https://andrewlock.net"&gt;Andrew Lock&lt;/a&gt;'s excellent blog post about
+&lt;a href="https://andrewlock.net/creating-parameterised-tests-in-xunit-with-inlinedata-classdata-and-memberdata"&gt;Creating parameterised tests in xUnit&lt;/a&gt;
+when I remembered something I wrote a while back that has proven to be quite useful.&lt;/p&gt;
+&lt;p&gt;The code in questions allows you to use embedded resources with &lt;a href="https://xunit.github.io/docs/getting-started-desktop.html#write-first-theory"&gt;xUnit's theory concept&lt;/a&gt;
+(which is similar to a &lt;code&gt;TestCase&lt;/code&gt; in NUnit).&lt;/p&gt;
+&lt;p&gt;The code is far from perfect, but short and straight forward enough to change to your hearts intent.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using Xunit.Sdk;
+
+namespace MyProject.Tests
+{
+    public sealed class EmbeddedResourceDataAttribute : DataAttribute
+    {
+        private readonly string[] _args;
+
+        public EmbeddedResourceDataAttribute(params string[] args)
+        {
+            _args = args;
+        }
+
+        public override IEnumerable&amp;lt;object[]&amp;gt; GetData(MethodInfo testMethod)
+        {
+            var result = new object[_args.Length];
+            for (var index = 0; index &amp;lt; _args.Length; index++)
+            {
+                result[index] = ReadManifestData(_args[index]);
+            }
+            return new[] { result };
+        }
+
+        public static string ReadManifestData(string resourceName)
+        {
+            var assembly = typeof(EmbeddedResourceDataAttribute).GetTypeInfo().Assembly;
+            resourceName = resourceName.Replace(&amp;quot;/&amp;quot;, &amp;quot;.&amp;quot;);
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null)
+                {
+                    throw new InvalidOperationException(&amp;quot;Could not load manifest resource stream.&amp;quot;);
+                }
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can now use embedded resources in your tests like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;namespace MyProject.Tests
+{
+    public sealed class JediCouncilFixture
+    {
+        [Theory]
+        [EmbeddedResourceData(&amp;quot;MyProject.Tests/Data/S.json&amp;quot;)]
+        public void Should_Return_Expected_Advice_From_Jedi_Council(string json)
+        {
+            // Given
+            var expected = JsonConvert.DeserializeObject&amp;lt;Advice&amp;gt;(json);
+
+            // When
+            var result = JediCouncil.AskForAdvice();
+
+            // Then
+            Assert.Equal(expected, result, new AdviceComparer());
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+		<summary>&lt;p&gt;I was reading &lt;a href="https://andrewlock.net"&gt;Andrew Lock&lt;/a&gt;'s excellent blog post about
+&lt;a href="https://andrewlock.net/creating-parameterised-tests-in-xunit-with-inlinedata-classdata-and-memberdata"&gt;Creating parameterised tests in xUnit&lt;/a&gt;
+when I remembered something I wrote a while back that has proven to be quite useful.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2017/08/never-mutate-state-in-a-debug-assert-call" />
+		<id>http://patriksvensson.se/2017/08/never-mutate-state-in-a-debug-assert-call</id>
+		<title>Never mutate state in a Debug.Assert call</title>
+		<updated>2017-08-02T00:00:00Z</updated>
+		<content>&lt;p&gt;Yesterday I encountered a bug in a library I'm working on that only seemed
+to occur when compiled in release mode. I was scratching my head for a little
+while but suddenly it occured to me when I encountered the following line:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Debug.Assert(reader.Read() == '-'); // Consume token
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The problem with the above statement is that calls to &lt;code&gt;Debug.Assert&lt;/code&gt; are conditional,
+so when running under a non-debug build, the call won't be made and the expression
+won't be evaluated.&lt;/p&gt;
+&lt;h4 id="so-what-lessons-can-we-learn-from-this"&gt;So what lessons can we learn from this?&lt;/h4&gt;
+&lt;p&gt;Never mutate state in a &lt;code&gt;Debug.Assert&lt;/code&gt; call.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;Yesterday I encountered a bug in a library I'm working on that only seemed
+to occur when compiled in release mode. I was scratching my head for a little
+while but suddenly it occured to me when I encountered the following line:&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2016/12/azure-web-apps-and-the-certificate-store" />
+		<id>http://patriksvensson.se/2016/12/azure-web-apps-and-the-certificate-store</id>
+		<title>Azure Web Apps and the certificate store</title>
+		<updated>2016-12-07T00:00:00Z</updated>
+		<content>&lt;p&gt;I was trying to load a certificate from the certificate store in an Azure Web App today,
+and for some reason I could not find it via it's thumbprint. Since I thought I was
+looking in the wrong certificate store, I went to &lt;a href="https://github.com/projectkudu/kudu"&gt;Kudu&lt;/a&gt;
+to take a closer look via the PowerShell debug console.&lt;/p&gt;
+&lt;p&gt;My code (probably) wasn't wrong but the certificate simply wasn't there.&lt;/p&gt;
+&lt;p&gt;After some googling I found out that WebApps in Azure doesn't have access to uploaded
+certificates unless you add a special AppSetting variable called &lt;code&gt;WEBSITE_LOAD_CERTIFICATES&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;You can either set this setting to a comma separated list of the certificate thumbprint that you want to expose,
+or you can do what I did (&lt;em&gt;YOLO™&lt;/em&gt;) and set it to &lt;code&gt;*&lt;/code&gt; which exposes all available certificates
+to the application.&lt;/p&gt;
+&lt;p&gt;Also, if you're interested in Kudu (which is awesome), check out &lt;a href="https://twitter.com/devlead"&gt;devlead&lt;/a&gt;'s
+appearance on &lt;em&gt;Azure Podcast&lt;/em&gt; where he spends 30 minutes or so talking about it:
+&lt;a href="http://azpodcast.azurewebsites.net/post/Episode-147-Kudu?utm_source=twitterfeed&amp;amp;utm_medium=twitter"&gt;http://azpodcast.azurewebsites.net/post/Episode-147-Kudu?utm_source=twitterfeed&amp;amp;utm_medium=twitter&lt;/a&gt;&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;I was trying to load a certificate from the certificate store in an Azure Web App today,
+and for some reason I could not find it via it's thumbprint. Since I thought I was
+looking in the wrong certificate store, I went to &lt;a href="https://github.com/projectkudu/kudu"&gt;Kudu&lt;/a&gt;
+to take a closer look via the PowerShell debug console.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2014/11/cake-and-appveyor-integration" />
+		<id>http://patriksvensson.se/2014/11/cake-and-appveyor-integration</id>
+		<title>Cake and AppVeyor integration</title>
+		<updated>2014-11-23T00:00:00Z</updated>
+		<content>&lt;p&gt;In this blog post I will show you how to use &lt;a href="https://github.com/cake-build/cake"&gt;Cake&lt;/a&gt; with your AppVeyor CI builds.&lt;/p&gt;
+&lt;!--excerpt--&gt;
+&lt;p&gt;####1. Create the build script&lt;/p&gt;
+&lt;p&gt;Add a build script called &lt;code&gt;build.cake&lt;/code&gt; to the project root. In this tutorial, we'll just create a really simple build script for demonstration.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// Get the target.
+var target = Argument&amp;lt;string&amp;gt;(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;);
+
+Task(&amp;quot;Default&amp;quot;)
+  .Does(() =&amp;gt;
+{
+	Information(&amp;quot;Hello from Cake!&amp;quot;);
+});
+
+RunTarget(target);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;####2. Create a bootstrapper script&lt;/p&gt;
+&lt;p&gt;Create a old fashioned batch file called &lt;code&gt;build.cmd&lt;/code&gt; that will download Cake and execute the build script.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;#64;echo off
+
+:Build
+cls
+
+if not exist tools\Cake\Cake.exe ( 
+	echo Installing Cake...
+	tools\NuGet.exe install Cake -OutputDirectory tools -ExcludeVersion -NonInteractive -Prerelease
+)
+
+echo Starting Cake...
+tools\Cake\Cake.exe build.cake -target=Default -verbosity=diagnostic
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;####3. Add NuGet.exe to your repository&lt;/p&gt;
+&lt;p&gt;Start by copying &lt;code&gt;NuGet.exe&lt;/code&gt; to your tools folder. Cake uses the &lt;code&gt;tools&lt;/code&gt; path as a convention for finding stuff it needs such as unit test runners and other tools.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;MyProject/
+&lt;ul&gt;
+&lt;li&gt;tools/
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;NuGet.exe&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;build.cake&lt;/li&gt;
+&lt;li&gt;build.cmd&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;####4. Tell AppVeyor what to do&lt;/p&gt;
+&lt;p&gt;Now we need to tell AppVeyor how to start the Cake build. Do this by setting the build script for your AppVeyor project to &lt;code&gt;build.cmd&lt;/code&gt;. Save your settings and you should be done.&lt;/p&gt;
+&lt;p&gt;&lt;img src="/images/cake-appveyor-build-settings.png" class="img-fluid" alt="AppVeyor Build Settings" /&gt;&lt;/p&gt;
+&lt;p&gt;####5. Profit&lt;/p&gt;
+&lt;p&gt;The next triggered build will now execute the Cake build script as expected.&lt;/p&gt;
+&lt;p&gt;&lt;img src="/images/cake-appveyor-profit.png" class="img-fluid" alt="AppVeyor Build" /&gt;&lt;/p&gt;
+&lt;p&gt;For more information about Cake, see &lt;a href="http://cake.readthedocs.org"&gt;http://cake.readthedocs.org&lt;/a&gt;.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;In this blog post I will show you how to use &lt;a href="https://github.com/cake-build/cake"&gt;Cake&lt;/a&gt; with your AppVeyor CI builds.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2014/08/script-aliases" />
+		<id>http://patriksvensson.se/2014/08/script-aliases</id>
+		<title>Script aliases</title>
+		<updated>2014-08-19T00:00:00Z</updated>
+		<content>&lt;p&gt;Cake supports something called script aliases. Script aliases are convenience methods that are easily accessible directly from a Cake script. Every &lt;a href="http://cake.readthedocs.org/en/latest/api-documentation.html"&gt;API method&lt;/a&gt; in Cake is implemented like this.&lt;/p&gt;
+&lt;p&gt;In this blog post I will show how to extend Cake with your own script aliases. It's really simple, I promise. ;-)&lt;/p&gt;
+&lt;!--excerpt--&gt;
+&lt;p&gt;####Creating an extension&lt;/p&gt;
+&lt;p&gt;Start by creating a new class library project and add a reference to the &lt;code&gt;Cake.Core&lt;/code&gt; NuGet package.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;PM&amp;gt; Install-Package Cake.Core
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Add the script alias method that you want to expose to your Cake script. A script alias method is simply an extension method for &lt;code&gt;ICakeContext&lt;/code&gt; that's been marked with the &lt;code&gt;CakeMethodAlias&lt;/code&gt; attribute.&lt;/p&gt;
+&lt;p&gt;You could also add an script alias property, which works the same way as a script alias method, except that it accepts no arguments and is marked with the &lt;code&gt;CakePropertyAlias&lt;/code&gt; attribute.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;using Cake.Core;
+using Cake.Core.Annotations;
+
+public static class MyCakeExtension
+{
+   [CakeMethodAlias]
+   public static int GetMagicNumber(this ICakeContext context, bool minValue)
+   {
+      return minValue ? int.MinValue : int.MaxValue;
+   }
+
+   [CakePropertyAlias]
+   public static int TheAnswerToLife(this ICakeContext context)
+   {
+      return 42;
+   }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;####Using the extension&lt;/p&gt;
+&lt;p&gt;Compile the assembly and add a reference to it in the build script via the &lt;code&gt;#r&lt;/code&gt; directive.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#r &amp;quot;tools/MyCakeExtension.dll&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now you should be able to call the method from the script.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Task(&amp;quot;GetSomeAnswers&amp;quot;)
+   .Does(() =&amp;gt;
+{
+    // Write the values to the console. 
+    Information(&amp;quot;Magic number: {0}&amp;quot;, GetMagicNumber(false));
+    Information(&amp;quot;The answer to life: {0}&amp;quot;, TheAnswerToLife);
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;####Wrapping up&lt;/p&gt;
+&lt;p&gt;This covers the basics of how to create script aliases in Cake.&lt;br /&gt;
+If you create a cool extension, tell me about it and I will link to it from the &lt;a href="https://github.com/cake-build/cake"&gt;Cake repository&lt;/a&gt;.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;Cake supports something called script aliases. Script aliases are convenience methods that are easily accessible directly from a Cake script. Every &lt;a href="http://cake.readthedocs.org/en/latest/api-documentation.html"&gt;API method&lt;/a&gt; in Cake is implemented like this.&lt;/p&gt;
+&lt;p&gt;In this blog post I will show how to extend Cake with your own script aliases. It's really simple, I promise. ;-)&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2014/07/its-not-a-party-without-cake" />
+		<id>http://patriksvensson.se/2014/07/its-not-a-party-without-cake</id>
+		<title>It's not a party without Cake</title>
+		<updated>2014-07-18T00:00:00Z</updated>
+		<content>&lt;p&gt;I have during my nine years as a (professional) programmer used several different build automation systems such as &lt;a href="https://github.com/ruby/rake"&gt;Rake&lt;/a&gt;, &lt;a href="https://github.com/psake/psake"&gt;psake&lt;/a&gt;, &lt;a href="http://www.cmake.org/"&gt;CMake&lt;/a&gt;, &lt;a href="http://msdn.microsoft.com/en-us/library/ms181709.aspx"&gt;TFS Build&lt;/a&gt; and &lt;a href="http://fsharp.github.io/FAKE/"&gt;FAKE&lt;/a&gt;, but none of these have allowed me to write my build scripts using C# - the language I use the most.&lt;/p&gt;
+&lt;p&gt;About two months ago I decided to change that and now it's time to formally introduce Cake, which is short for C# Make.&lt;/p&gt;
+&lt;!--excerpt--&gt;
+&lt;p&gt;&lt;img src="/images/cake-medium.png" class="img-fluid" alt="Build Status" /&gt;&lt;/p&gt;
+&lt;p&gt;####What is Cake?&lt;/p&gt;
+&lt;p&gt;Cake is (like you probably already figured out) a build automation system with a C# DSL to do things like compiling code, copy files/folders, running unit tests, compress files and build NuGet packages.&lt;/p&gt;
+&lt;p&gt;Cake uses a &lt;a href="http://martinfowler.com/articles/rake.html#DependencyBasedProgramming"&gt;dependency based programming model&lt;/a&gt; just like Rake, FAKE and similar build automation systems where you declare &lt;em&gt;tasks&lt;/em&gt; and the dependencies between those. When you execute a task, Cake will construct a directed acyclic graph containing all tasks and execute these in the correct order.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Task(&amp;quot;A&amp;quot;)
+    .Does(() =&amp;gt;
+{
+});
+
+Task(&amp;quot;B&amp;quot;)
+    .IsDependentOn(&amp;quot;A&amp;quot;);
+    .Does(() =&amp;gt;
+{
+});
+
+RunTarget(&amp;quot;B&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The goal of Cake is to be a first class alternative to those who - like me - want to write their build scripts in C# instead of Ruby, F# or Powershell.&lt;/p&gt;
+&lt;p&gt;####What does a Cake script look like?&lt;/p&gt;
+&lt;p&gt;Assume our build script have four steps where we want to:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Clean up old artifacts.&lt;/li&gt;
+&lt;li&gt;Build the code.&lt;/li&gt;
+&lt;li&gt;Run unit tests.&lt;/li&gt;
+&lt;li&gt;Package generated artifacts.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;A build script like that could look something like this.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;var target = Argument&amp;lt;string&amp;gt;(&amp;quot;target&amp;quot;, &amp;quot;Package&amp;quot;);
+var config = Argument&amp;lt;string&amp;gt;(&amp;quot;config&amp;quot;, &amp;quot;Release&amp;quot;);
+
+Task(&amp;quot;Clean&amp;quot;)
+    .Does(() =&amp;gt;
+{
+    // Clean directories.
+    CleanDirectory(&amp;quot;./output&amp;quot;);
+    CleanDirectory(&amp;quot;./output/bin&amp;quot;);
+    CleanDirectories(&amp;quot;./src/**/bin/&amp;quot; + config);
+});
+
+Task(&amp;quot;Build&amp;quot;)
+    .IsDependentOn(&amp;quot;Clean&amp;quot;)
+    .Does(() =&amp;gt;
+{
+    // Build the solution using MSBuild.
+    MSBuild(&amp;quot;./src/Project.sln&amp;quot;, settings =&amp;gt; 
+        settings.SetConfiguration(config));     
+});
+
+Task(&amp;quot;RunUnitTests&amp;quot;)
+    .IsDependentOn(&amp;quot;Build&amp;quot;)
+    .Does(() =&amp;gt;
+{
+    // Run xUnit tests.
+    XUnit(&amp;quot;./src/**/bin/&amp;quot; + config + &amp;quot;/*.Tests.dll&amp;quot;);
+});
+
+Task(&amp;quot;CopyFiles&amp;quot;)
+    .IsDependentOn(&amp;quot;RunUnitTests&amp;quot;)
+    .Does(() =&amp;gt;
+{
+    var path = &amp;quot;./src/Project/bin/&amp;quot; + configuration;    
+    var files = GetFiles(path + &amp;quot;/**/*.dll&amp;quot;) 
+        + GetFiles(path + &amp;quot;/**/*.exe&amp;quot;);
+
+    // Copy all exe and dll files to the output directory.
+    CopyFiles(files, &amp;quot;./output/bin&amp;quot;);
+});    
+
+Task(&amp;quot;Package&amp;quot;)
+    .IsDependentOn(&amp;quot;RunUnitTests&amp;quot;)
+    .Does(() =&amp;gt;
+{
+    // Zip all files in the bin directory.
+    Zip(&amp;quot;./output/bin&amp;quot;, &amp;quot;./output/build.zip&amp;quot;);
+});
+
+RunTarget(target);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To run our build script we invoke &lt;code&gt;Cake.exe&lt;/code&gt; with the script file as the first argument, and (optionally) the name of our target task as the second argument. We can also tell Cake how much information we're interested in with the built in &lt;code&gt;verbosity&lt;/code&gt; parameter, which is very useful when debugging a script.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;C:&amp;gt; Cake.exe build.cake -target=Package -verbosity=diagnostic
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is just an example. Much more functionality is already implemented such as support for &lt;code&gt;MSBuild&lt;/code&gt;, &lt;code&gt;MSTest&lt;/code&gt;, &lt;code&gt;xUnit&lt;/code&gt;, &lt;code&gt;NUnit&lt;/code&gt;, &lt;code&gt;ILMerge&lt;/code&gt;, &lt;code&gt;NuGet pack/restore&lt;/code&gt; and the most common file system operations such as &lt;code&gt;file/folder manipulation&lt;/code&gt; and &lt;code&gt;globbing&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To see an actual build script in action, fork or clone the &lt;a href="https://github.com/cake-build/cake"&gt;GitHub repository&lt;/a&gt; and run &lt;code&gt;build.cmd&lt;/code&gt; which will download Cake from NuGet and run the &lt;code&gt;build.cake&lt;/code&gt; script.&lt;/p&gt;
+&lt;p&gt;####What now?&lt;/p&gt;
+&lt;p&gt;This was only supposed to be an introduction to Cake but I will blog more about this in the near future.&lt;/p&gt;
+&lt;p&gt;If you find this project interesting and want to help or you just have opinions about stuff, you can check out the full repository at &lt;a href="https://github.com/cake-build/cake"&gt;https://github.com/cake-build/cake&lt;/a&gt;.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;I have during my nine years as a (professional) programmer used several different build automation systems such as &lt;a href="https://github.com/ruby/rake"&gt;Rake&lt;/a&gt;, &lt;a href="https://github.com/psake/psake"&gt;psake&lt;/a&gt;, &lt;a href="http://www.cmake.org/"&gt;CMake&lt;/a&gt;, &lt;a href="http://msdn.microsoft.com/en-us/library/ms181709.aspx"&gt;TFS Build&lt;/a&gt; and &lt;a href="http://fsharp.github.io/FAKE/"&gt;FAKE&lt;/a&gt;, but none of these have allowed me to write my build scripts using C# - the language I use the most.&lt;/p&gt;
+&lt;p&gt;About two months ago I decided to change that and now it's time to formally introduce Cake, which is short for C# Make.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2014/06/the-singleton-logger" />
+		<id>http://patriksvensson.se/2014/06/the-singleton-logger</id>
+		<title>The singleton logger</title>
+		<updated>2014-06-18T00:00:00Z</updated>
+		<content>&lt;p&gt;It is widely accepted that you access logging frameworks via a static singleton instance, and most logging frameworks are designed to work like this. But why? Many people often refer to it as being a cross-cross cutting concern; and that it's therefore not important to do things by the book. Not only does most logging frameworks use the static singleton as a façade, but they also store process-wide state.&lt;/p&gt;
+&lt;!--excerpt--&gt;
+&lt;p&gt;Cross-cutting concern or not; most developers normally won't argue against the dependency inversion principle, but when it comes to logging it all seem forgotten. One can understand that logging should be simple, but if we went down that path we could justify anything by the same standard.&lt;/p&gt;
+&lt;p&gt;A static singleton is to me (in 99.99% of the cases) a sign that something is wrong; a code smell regardless of the justifications that should be handled with caution.&lt;/p&gt;
+&lt;p&gt;####Where am I going with this?&lt;/p&gt;
+&lt;p&gt;I've started using the excellent &lt;a href="http://serilog.net/"&gt;Serilog&lt;/a&gt; recently, and I was glad to see that while it provides a static log facade doesn't seem to encourage it for any other reason than to be more easily adoptable by other frameworks. I just visited their &lt;a href="https://github.com/serilog/serilog/wiki/Getting-Started"&gt;GitHub page&lt;/a&gt;, and in the footer you can read:&lt;/p&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;Configuring and using the Log class is an optional convenience that makes it easier for libraries to adopt Serilog. Serilog does not and will never adopt any static/process-wide state within the logging pipeline itself.&amp;quot;&amp;quot;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Sounds like a small step in the right direction.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;It is widely accepted that you access logging frameworks via a static singleton instance, and most logging frameworks are designed to work like this. But why? Many people often refer to it as being a cross-cross cutting concern; and that it's therefore not important to do things by the book. Not only does most logging frameworks use the static singleton as a façade, but they also store process-wide state.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2014/04/introducing-lunt" />
+		<id>http://patriksvensson.se/2014/04/introducing-lunt</id>
+		<title>Introducing Lunt</title>
+		<updated>2014-04-05T00:00:00Z</updated>
+		<content>&lt;p&gt;Last summer, a friend and I started to write a little &lt;a href="http://en.wikipedia.org/wiki/Paradroid"&gt;Paradroid&lt;/a&gt; clone. Since my only real experience as a game programmer was with XNA and MonoGame, I had grown fond of the &lt;a href="http://msdn.microsoft.com/en-us/library/ff827626.aspx"&gt;XNA Content Pipeline&lt;/a&gt;, and naturally wanted something similar for this project.&lt;/p&gt;
+&lt;p&gt;The game was going to be cross platform (Windows and Linux) so the asset pipeline had to be cross platform as well. The natural step was therefore to see if the &lt;a href="https://github.com/mono/MonoGame/wiki/MonoGame-Content-Processing"&gt;MonoGame Content Builder&lt;/a&gt; (MGCB for short) could be used for this.&lt;/p&gt;
+&lt;!--excerpt--&gt;
+&lt;p&gt;Alas, MonoGame is a port of XNA, and since they need to maintain backwards compatibility; they also kept the &lt;a href="http://blogs.msdn.com/b/shawnhar/archive/2011/07/07/xnb-file-format-documentation.aspx"&gt;XNB output format&lt;/a&gt;. Since we had no wish to implement reading of the XNB format to be able to use MGCB, in combination with the difficulties involved with debugging the MGCB pipeline and the lack of unit tests, we decided to build something simple of our own.&lt;/p&gt;
+&lt;p&gt;&lt;img src="/images/bender.png" class="img-fluid" alt="Bender" /&gt;&lt;/p&gt;
+&lt;p&gt;####How does it work?&lt;/p&gt;
+&lt;p&gt;The Lunt pipeline works almost exactly like the XNA Content pipeline. It's composed of two mandatory components (the importer and the writer) and one or many optional processors.&lt;/p&gt;
+&lt;p&gt;The importers role is to read asset data from a stream and to create a managed representation of it. If a processor is defined for an asset, the managed representation will be sent there to be either transformed (a change of type) or processed in some way. The last step in the pipeline is the actual writing of the asset back to a stream, and this is the writer's responsibility.&lt;/p&gt;
+&lt;p&gt;The stream I mention is normally a file stream, but can be any kind of stream thanks to the built-in extensibility points.&lt;/p&gt;
+&lt;p&gt;&lt;img src="/images/pipeline.png" class="img-fluid" alt="Pipeline" /&gt;&lt;/p&gt;
+&lt;p&gt;A more technical explaination of the pipeline can be found in the &lt;a href="https://github.com/lunt/lunt/wiki/Getting-started"&gt;Lunt Wiki&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;####Key points&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Build engine not tied to a specific hosting provider or output format.&lt;/li&gt;
+&lt;li&gt;Supports incremental builds.&lt;/li&gt;
+&lt;li&gt;Easy to debug the build pipeline by creating a debug project and referencing the Lunt build engine assembly.&lt;/li&gt;
+&lt;li&gt;The ease of C++/CLI to call into native libraries, makes it really simple to use existing functionality such as &lt;a href="http://assimp.sourceforge.net/"&gt;Assimp&lt;/a&gt; or &lt;a href="http://www.freetype.org/"&gt;FreeType&lt;/a&gt; as part of the pipeline.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;####Finally&lt;/p&gt;
+&lt;p&gt;I will probably continue to write posts about Lunt here from time to time, so if you're interested in knowing more, bookmark or add this blog to the RSS reader of your choice.&lt;/p&gt;
+&lt;p&gt;You can find the source code and more information on the GitHub page at &lt;a href="https://github.com/lunt/lunt"&gt;https://github.com/lunt/lunt&lt;/a&gt;.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;Last summer, a friend and I started to write a little &lt;a href="http://en.wikipedia.org/wiki/Paradroid"&gt;Paradroid&lt;/a&gt; clone. Since my only real experience as a game programmer was with XNA and MonoGame, I had grown fond of the &lt;a href="http://msdn.microsoft.com/en-us/library/ff827626.aspx"&gt;XNA Content Pipeline&lt;/a&gt;, and naturally wanted something similar for this project.&lt;/p&gt;
+&lt;p&gt;The game was going to be cross platform (Windows and Linux) so the asset pipeline had to be cross platform as well. The natural step was therefore to see if the &lt;a href="https://github.com/mono/MonoGame/wiki/MonoGame-Content-Processing"&gt;MonoGame Content Builder&lt;/a&gt; (MGCB for short) could be used for this.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2014/01/displaying-teamcity-build-status-on-github" />
+		<id>http://patriksvensson.se/2014/01/displaying-teamcity-build-status-on-github</id>
+		<title>Displaying TeamCity build status on GitHub</title>
+		<updated>2014-01-24T00:00:00Z</updated>
+		<content>&lt;p&gt;Have you ever wanted to display the current CI build status for a TeamCity project in your GitHub README? I did but couldn't find any good, straight forward information about how to do it. Turns out it's quite simple.&lt;/p&gt;
+&lt;!--excerpt--&gt;
+&lt;p&gt;&lt;img src="/images/tc_status_successful.png" class="img-fluid" alt="Build Status" /&gt;&lt;/p&gt;
+&lt;p&gt;The markup example below shows the build status icon with a link to the TeamCity build status page.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[![Build Status](http://buildserver.com/app/rest/builds/buildType:id:BUILD_CONFIG_ID/statusIcon)]
+(http://buildserver.com/viewType.html?buildTypeId=BUILD_CONFIG_ID&amp;amp;guest=1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Of course, you'll have to replace &lt;code&gt;buildserver.com&lt;/code&gt; with your own build server, and &lt;code&gt;BUILD_CONFIG_ID&lt;/code&gt; with the build configuration ID of your project. You can find the ID under &amp;quot;General Settings&amp;quot; for your TeamCity project.&lt;/p&gt;
+&lt;p&gt;You also need to enable guest user login in the TeamCity administration page for the build status page to be available to everyone.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;Have you ever wanted to display the current CI build status for a TeamCity project in your GitHub README? I did but couldn't find any good, straight forward information about how to do it. Turns out it's quite simple.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2013/12/binarywriter-and-cplusplus" />
+		<id>http://patriksvensson.se/2013/12/binarywriter-and-cplusplus</id>
+		<title>System.IO.BinaryWriter and C++</title>
+		<updated>2013-12-16T00:00:00Z</updated>
+		<content>&lt;p&gt;A while back I had to read string data written by .NET's &lt;a href="http://msdn.microsoft.com/en-us/library/system.io.binarywriter(v=vs.110).aspx"&gt;BinaryWriter&lt;/a&gt; in C++. I was initially a little bit confused about how the data was written but after using Reflector it turned out that the write method prefixes the string with a &lt;a href="http://en.wikipedia.org/wiki/Variable-length_quantity"&gt;7-bit encoded integer&lt;/a&gt;.&lt;/p&gt;
+&lt;!--excerpt--&gt;
+&lt;p&gt;The encoded integer indicates the length of the written string, and is more commonly known as &lt;a href="http://en.wikipedia.org/wiki/UTF-7"&gt;UTF-7 encoding&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The short example below shows how the string length can be read from a standard input stream.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;int32_t BinaryReader::read7BitEncodedInteger(ifstream* stream)
+{
+    char current;
+    int32_t index = 0, result = 0;
+    do
+    {
+        stream-&amp;gt;read((char*)&amp;amp;current, sizeof(char));
+        result |= (current &amp;amp; 127) &amp;lt;&amp;lt; index;
+        index += 7;
+    }
+    while((current &amp;amp; 128) != 0);
+    return result;
+}
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+		<summary>&lt;p&gt;A while back I had to read string data written by .NET's &lt;a href="http://msdn.microsoft.com/en-us/library/system.io.binarywriter(v=vs.110).aspx"&gt;BinaryWriter&lt;/a&gt; in C++. I was initially a little bit confused about how the data was written but after using Reflector it turned out that the write method prefixes the string with a &lt;a href="http://en.wikipedia.org/wiki/Variable-length_quantity"&gt;7-bit encoded integer&lt;/a&gt;.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2013/08/culture-agnostic-string-comparisons" />
+		<id>http://patriksvensson.se/2013/08/culture-agnostic-string-comparisons</id>
+		<title>Culture agnostic string comparisons</title>
+		<updated>2013-08-22T00:00:00Z</updated>
+		<content>&lt;p&gt;Something I've seen a lot at different clients is naive string comparison. The most common case is to do something involving String.ToLower() on both strings that are being compared and then an equality comparison of the result.&lt;/p&gt;
+&lt;!--excerpt--&gt;
+&lt;p&gt;This is not always the correct way of doing it, and especially not if you at some point in time want people who's using different culture settings than you to run your application. You can read more about this problem in &lt;a href="http://www.codinghorror.com/blog/2008/03/whats-wrong-with-turkey.html"&gt;this excellent blog post by Jeff Atwood&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;What you should do is simply to use the overloads of the &lt;a href="http://msdn.microsoft.com/en-us/library/c64xh8f9.aspx"&gt;String.Equals&lt;/a&gt; method that takes a &lt;code&gt;StringComparison&lt;/code&gt;, or use a &lt;a href="http://msdn.microsoft.com/en-us/library/system.stringcomparer.aspx"&gt;StringComparer&lt;/a&gt; directly.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[Fact]
+public void Test_String_Equality()
+{
+   // Given
+   string first = &amp;quot;HELLO WORLD&amp;quot;;
+   string second = &amp;quot;hello world&amp;quot;;
+
+   // When
+   bool result = first.Equals(second, StringComparison.OrdinalIgnoreCase);
+
+   // Then
+   Assert.True(result);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;StringComparer&lt;/code&gt; is also very valuable to use with collections when you need to do a lookup for a specific string (i.e. &lt;code&gt;HashSet&amp;lt;string&amp;gt;&lt;/code&gt; or &lt;code&gt;IDictionary&amp;lt;String, T&amp;gt;&lt;/code&gt;).&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[Fact]
+public void Test_String_Lookup()
+{
+   // Given
+   var dictionary = new Dictionary&amp;lt;string, int&amp;gt;(StringComparer.OrdinalIgnoreCase);
+   dictionary.Add(&amp;quot;HELLO WORLD&amp;quot;, 42);
+
+   // When
+   var result = dictionary.ContainsKey(&amp;quot;hello world&amp;quot;);
+
+   // Then
+   Assert.True(result);
+}
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+		<summary>&lt;p&gt;Something I've seen a lot at different clients is naive string comparison. The most common case is to do something involving String.ToLower() on both strings that are being compared and then an equality comparison of the result.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2013/08/how-to-dynamically-add-attributes-to-a-class-with-castle-core" />
+		<id>http://patriksvensson.se/2013/08/how-to-dynamically-add-attributes-to-a-class-with-castle-core</id>
+		<title>How to dynamically add attributes to a class with Castle.Core</title>
+		<updated>2013-08-15T00:00:00Z</updated>
+		<content>&lt;p&gt;Yesterday I was working on some unit tests that ensured that some user derived classes passed to a method were decorated with a specific attribute.&lt;/p&gt;
+&lt;!--excerpt--&gt;
+&lt;p&gt;Since the mocking framework I used (&lt;a href="https://code.google.com/p/moq/"&gt;Moq&lt;/a&gt;) did not support dynamically adding of attributes to a mocked type, my first approach was simply to create some private test classes that contained different permutations of the specified attribute, like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[TheAttribute(5)]
+public class FakeClassWithAnAttributeSetToANumberLessThanTen
+{
+}
+
+[TheAttribute(15)]
+public class FakeClassWithAnAttributeSetToANumberGreaterThanTen
+{
+}
+
+[TheAttribute(10, DefaultStuffz=Stuffz.Random)]
+public class FakeClassWithAnAttributeSetWithDefaultStuffz
+{
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Alas, as the amount of tests grew, I realized that this wasn't a viable solution.&lt;/p&gt;
+&lt;p&gt;Finally I found a quite nice solution by using &lt;a href="http://www.castleproject.org/projects/dynamicproxy/"&gt;Castle.DynamicProxy&lt;/a&gt; available in the Castle project. I have personally never used the Castle framework before, but the experience using it was quite nice.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;public class MyClass
+{
+}
+
+[AttributeUsage(AttributeTargets.Class)]
+public class MyClassAttribute : Attribute
+{
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To create an instance of &lt;code&gt;MyClass&lt;/code&gt;, dynamically decorated with a &lt;code&gt;MyClassAttribute&lt;/code&gt; you simply do as below.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;public static MyClass CreateClassDecoratedWithAttribute()
+{
+	// Get the attribute constructor.
+	Type[] ctorTypes = Type.EmptyTypes;
+	var ctor = typeof(MyClassAttribute).GetConstructor(ctorTypes);
+	Debug.Assert(ctor != null, &amp;quot;Could not get constructor for attribute.&amp;quot;);
+
+	// Create an attribute builder.
+	object[] attributeArguments = new object[] { };
+	var builder = new System.Reflection.Emit.CustomAttributeBuilder(ctor, attributeArguments);
+
+	// Create the proxy generation options.
+    // This is how we tell Castle.DynamicProxy how to create the attribute.
+	var proxyOptions = new Castle.DynamicProxy.ProxyGenerationOptions();
+	proxyOptions.AdditionalAttributes.Add(builder);
+
+	// Create the proxy generator.
+	var proxyGenerator = new Castle.DynamicProxy.ProxyGenerator();
+
+	// Create the class proxy.
+	var classArguments = new object[] { };
+	return (MyClass)proxyGenerator.CreateClassProxy(typeof(MyClass), proxyOptions, classArguments);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And now you can test that this actually works.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[Fact]
+public void Created_Class_Should_Be_Decorated_With_Attribute()
+{
+	// Given
+	var myClass = CreateClassDecoratedWithAttribute();
+
+	// When
+	var attribute = myClass.GetType().GetCustomAttributes(typeof(MyClassAttribute), true)[0];
+
+	// Then
+	Assert.NotNull(attribute);
+    Assert.IsType&amp;lt;MyClassAttribute&amp;gt;(attribute);
+}
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+		<summary>&lt;p&gt;Yesterday I was working on some unit tests that ensured that some user derived classes passed to a method were decorated with a specific attribute.&lt;/p&gt;</summary>
+	</entry>
+</feed>
