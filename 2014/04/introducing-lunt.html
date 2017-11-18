@@ -112,20 +112,20 @@ Published on 05 april 2014<br>    </div>
 <!--excerpt-->
 <p>Alas, MonoGame is a port of XNA, and since they need to maintain backwards compatibility; they also kept the <a href="http://blogs.msdn.com/b/shawnhar/archive/2011/07/07/xnb-file-format-documentation.aspx">XNB output format</a>. Since we had no wish to implement reading of the XNB format to be able to use MGCB, in combination with the difficulties involved with debugging the MGCB pipeline and the lack of unit tests, we decided to build something simple of our own.</p>
 <p><img src="/images/bender.png" class="img-fluid" alt="Bender" /></p>
-<p>####How does it work?</p>
+<h2 id="how-does-it-work">How does it work?</h2>
 <p>The Lunt pipeline works almost exactly like the XNA Content pipeline. It's composed of two mandatory components (the importer and the writer) and one or many optional processors.</p>
 <p>The importers role is to read asset data from a stream and to create a managed representation of it. If a processor is defined for an asset, the managed representation will be sent there to be either transformed (a change of type) or processed in some way. The last step in the pipeline is the actual writing of the asset back to a stream, and this is the writer's responsibility.</p>
 <p>The stream I mention is normally a file stream, but can be any kind of stream thanks to the built-in extensibility points.</p>
 <p><img src="/images/pipeline.png" class="img-fluid" alt="Pipeline" /></p>
 <p>A more technical explaination of the pipeline can be found in the <a href="https://github.com/lunt/lunt/wiki/Getting-started">Lunt Wiki</a>.</p>
-<p>####Key points</p>
+<h2 id="key-points">Key points</h2>
 <ul>
 <li>Build engine not tied to a specific hosting provider or output format.</li>
 <li>Supports incremental builds.</li>
 <li>Easy to debug the build pipeline by creating a debug project and referencing the Lunt build engine assembly.</li>
 <li>The ease of C++/CLI to call into native libraries, makes it really simple to use existing functionality such as <a href="http://assimp.sourceforge.net/">Assimp</a> or <a href="http://www.freetype.org/">FreeType</a> as part of the pipeline.</li>
 </ul>
-<p>####Finally</p>
+<h2 id="finally">Finally</h2>
 <p>I will probably continue to write posts about Lunt here from time to time, so if you're interested in knowing more, bookmark or add this blog to the RSS reader of your choice.</p>
 <p>You can find the source code and more information on the GitHub page at <a href="https://github.com/lunt/lunt">https://github.com/lunt/lunt</a>.</p>
 

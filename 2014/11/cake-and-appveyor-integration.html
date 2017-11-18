@@ -112,7 +112,7 @@ Published on 23 november 2014<br>    </div>
 
 <p>In this blog post I will show you how to use <a href="https://github.com/cake-build/cake">Cake</a> with your AppVeyor CI builds.</p>
 <!--excerpt-->
-<p>####1. Create the build script</p>
+<h2 id="create-the-build-script">1. Create the build script</h2>
 <p>Add a build script called <code>build.cake</code> to the project root. In this tutorial, we'll just create a really simple build script for demonstration.</p>
 <pre><code>// Get the target.
 var target = Argument&lt;string&gt;(&quot;target&quot;, &quot;Default&quot;);
@@ -125,7 +125,7 @@ Task(&quot;Default&quot;)
 
 RunTarget(target);
 </code></pre>
-<p>####2. Create a bootstrapper script</p>
+<h2 id="create-a-bootstrapper-script">2. Create a bootstrapper script</h2>
 <p>Create a old fashioned batch file called <code>build.cmd</code> that will download Cake and execute the build script.</p>
 <pre><code>&#64;echo off
 
@@ -140,7 +140,7 @@ if not exist tools\Cake\Cake.exe (
 echo Starting Cake...
 tools\Cake\Cake.exe build.cake -target=Default -verbosity=diagnostic
 </code></pre>
-<p>####3. Add NuGet.exe to your repository</p>
+<h2 id="add-nuget.exe-to-your-repository">3. Add NuGet.exe to your repository</h2>
 <p>Start by copying <code>NuGet.exe</code> to your tools folder. Cake uses the <code>tools</code> path as a convention for finding stuff it needs such as unit test runners and other tools.</p>
 <ul>
 <li>MyProject/
@@ -155,10 +155,10 @@ tools\Cake\Cake.exe build.cake -target=Default -verbosity=diagnostic
 </ul>
 </li>
 </ul>
-<p>####4. Tell AppVeyor what to do</p>
+<h2 id="tell-appveyor-what-to-do">4. Tell AppVeyor what to do</h2>
 <p>Now we need to tell AppVeyor how to start the Cake build. Do this by setting the build script for your AppVeyor project to <code>build.cmd</code>. Save your settings and you should be done.</p>
 <p><img src="/images/cake-appveyor-build-settings.png" class="img-fluid" alt="AppVeyor Build Settings" /></p>
-<p>####5. Profit</p>
+<h2 id="profit">5. Profit</h2>
 <p>The next triggered build will now execute the Cake build script as expected.</p>
 <p><img src="/images/cake-appveyor-profit.png" class="img-fluid" alt="AppVeyor Build" /></p>
 <p>For more information about Cake, see <a href="http://cake.readthedocs.org">http://cake.readthedocs.org</a>.</p>

@@ -116,7 +116,7 @@ while but suddenly it occured to me when I encountered the following line:</p>
 <p>The problem with the above statement is that calls to <code>Debug.Assert</code> are conditional,
 so when running under a non-debug build, the call won't be made and the expression
 won't be evaluated.</p>
-<h4 id="so-what-lessons-can-we-learn-from-this">So what lessons can we learn from this?</h4>
+<h2 id="so-what-lessons-can-we-learn-from-this">So what lessons can we learn from this?</h2>
 <p>Never mutate state in a <code>Debug.Assert</code> call.</p>
 
 

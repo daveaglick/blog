@@ -4,7 +4,7 @@
 	<id>http://patriksvensson.se/</id>
 	<title>Patrik Svensson</title>
 	<rights>2017</rights>
-	<updated>2017-11-18T03:57:02Z</updated>
+	<updated>2017-11-18T10:05:51Z</updated>
 	<subtitle>Patrik Svensson</subtitle>
 	<entry>
 		<link href="http://patriksvensson.se/2017/11/using-embedded-resources-in-xunit-tests" />
@@ -102,7 +102,7 @@ while but suddenly it occured to me when I encountered the following line:&lt;/p
 &lt;p&gt;The problem with the above statement is that calls to &lt;code&gt;Debug.Assert&lt;/code&gt; are conditional,
 so when running under a non-debug build, the call won't be made and the expression
 won't be evaluated.&lt;/p&gt;
-&lt;h4 id="so-what-lessons-can-we-learn-from-this"&gt;So what lessons can we learn from this?&lt;/h4&gt;
+&lt;h2 id="so-what-lessons-can-we-learn-from-this"&gt;So what lessons can we learn from this?&lt;/h2&gt;
 &lt;p&gt;Never mutate state in a &lt;code&gt;Debug.Assert&lt;/code&gt; call.&lt;/p&gt;
 </content>
 		<summary>&lt;p&gt;Yesterday I encountered a bug in a library I'm working on that only seemed
@@ -140,7 +140,7 @@ to take a closer look via the PowerShell debug console.&lt;/p&gt;</summary>
 		<updated>2014-11-23T00:00:00Z</updated>
 		<content>&lt;p&gt;In this blog post I will show you how to use &lt;a href="https://github.com/cake-build/cake"&gt;Cake&lt;/a&gt; with your AppVeyor CI builds.&lt;/p&gt;
 &lt;!--excerpt--&gt;
-&lt;p&gt;####1. Create the build script&lt;/p&gt;
+&lt;h2 id="create-the-build-script"&gt;1. Create the build script&lt;/h2&gt;
 &lt;p&gt;Add a build script called &lt;code&gt;build.cake&lt;/code&gt; to the project root. In this tutorial, we'll just create a really simple build script for demonstration.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;// Get the target.
 var target = Argument&amp;lt;string&amp;gt;(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;);
@@ -153,7 +153,7 @@ Task(&amp;quot;Default&amp;quot;)
 
 RunTarget(target);
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;####2. Create a bootstrapper script&lt;/p&gt;
+&lt;h2 id="create-a-bootstrapper-script"&gt;2. Create a bootstrapper script&lt;/h2&gt;
 &lt;p&gt;Create a old fashioned batch file called &lt;code&gt;build.cmd&lt;/code&gt; that will download Cake and execute the build script.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;&amp;#64;echo off
 
@@ -168,7 +168,7 @@ if not exist tools\Cake\Cake.exe (
 echo Starting Cake...
 tools\Cake\Cake.exe build.cake -target=Default -verbosity=diagnostic
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;####3. Add NuGet.exe to your repository&lt;/p&gt;
+&lt;h2 id="add-nuget.exe-to-your-repository"&gt;3. Add NuGet.exe to your repository&lt;/h2&gt;
 &lt;p&gt;Start by copying &lt;code&gt;NuGet.exe&lt;/code&gt; to your tools folder. Cake uses the &lt;code&gt;tools&lt;/code&gt; path as a convention for finding stuff it needs such as unit test runners and other tools.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;MyProject/
@@ -183,10 +183,10 @@ tools\Cake\Cake.exe build.cake -target=Default -verbosity=diagnostic
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;####4. Tell AppVeyor what to do&lt;/p&gt;
+&lt;h2 id="tell-appveyor-what-to-do"&gt;4. Tell AppVeyor what to do&lt;/h2&gt;
 &lt;p&gt;Now we need to tell AppVeyor how to start the Cake build. Do this by setting the build script for your AppVeyor project to &lt;code&gt;build.cmd&lt;/code&gt;. Save your settings and you should be done.&lt;/p&gt;
 &lt;p&gt;&lt;img src="/images/cake-appveyor-build-settings.png" class="img-fluid" alt="AppVeyor Build Settings" /&gt;&lt;/p&gt;
-&lt;p&gt;####5. Profit&lt;/p&gt;
+&lt;h2 id="profit"&gt;5. Profit&lt;/h2&gt;
 &lt;p&gt;The next triggered build will now execute the Cake build script as expected.&lt;/p&gt;
 &lt;p&gt;&lt;img src="/images/cake-appveyor-profit.png" class="img-fluid" alt="AppVeyor Build" /&gt;&lt;/p&gt;
 &lt;p&gt;For more information about Cake, see &lt;a href="http://cake.readthedocs.org"&gt;http://cake.readthedocs.org&lt;/a&gt;.&lt;/p&gt;
@@ -201,7 +201,7 @@ tools\Cake\Cake.exe build.cake -target=Default -verbosity=diagnostic
 		<content>&lt;p&gt;Cake supports something called script aliases. Script aliases are convenience methods that are easily accessible directly from a Cake script. Every &lt;a href="http://cake.readthedocs.org/en/latest/api-documentation.html"&gt;API method&lt;/a&gt; in Cake is implemented like this.&lt;/p&gt;
 &lt;p&gt;In this blog post I will show how to extend Cake with your own script aliases. It's really simple, I promise. ;-)&lt;/p&gt;
 &lt;!--excerpt--&gt;
-&lt;p&gt;####Creating an extension&lt;/p&gt;
+&lt;h2 id="creating-an-extension"&gt;Creating an extension&lt;/h2&gt;
 &lt;p&gt;Start by creating a new class library project and add a reference to the &lt;code&gt;Cake.Core&lt;/code&gt; NuGet package.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;PM&amp;gt; Install-Package Cake.Core
 &lt;/code&gt;&lt;/pre&gt;
@@ -225,7 +225,7 @@ public static class MyCakeExtension
    }
 }
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;####Using the extension&lt;/p&gt;
+&lt;h2 id="using-the-extension"&gt;Using the extension&lt;/h2&gt;
 &lt;p&gt;Compile the assembly and add a reference to it in the build script via the &lt;code&gt;#r&lt;/code&gt; directive.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;#r &amp;quot;tools/MyCakeExtension.dll&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
@@ -238,7 +238,7 @@ public static class MyCakeExtension
     Information(&amp;quot;The answer to life: {0}&amp;quot;, TheAnswerToLife);
 });
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;####Wrapping up&lt;/p&gt;
+&lt;h2 id="wrapping-up"&gt;Wrapping up&lt;/h2&gt;
 &lt;p&gt;This covers the basics of how to create script aliases in Cake.&lt;br /&gt;
 If you create a cool extension, tell me about it and I will link to it from the &lt;a href="https://github.com/cake-build/cake"&gt;Cake repository&lt;/a&gt;.&lt;/p&gt;
 </content>
@@ -254,7 +254,7 @@ If you create a cool extension, tell me about it and I will link to it from the 
 &lt;p&gt;About two months ago I decided to change that and now it's time to formally introduce Cake, which is short for C# Make.&lt;/p&gt;
 &lt;!--excerpt--&gt;
 &lt;p&gt;&lt;img src="/images/cake-medium.png" class="img-fluid" alt="Build Status" /&gt;&lt;/p&gt;
-&lt;p&gt;####What is Cake?&lt;/p&gt;
+&lt;h2 id="what-is-cake"&gt;What is Cake?&lt;/h2&gt;
 &lt;p&gt;Cake is (like you probably already figured out) a build automation system with a C# DSL to do things like compiling code, copy files/folders, running unit tests, compress files and build NuGet packages.&lt;/p&gt;
 &lt;p&gt;Cake uses a &lt;a href="http://martinfowler.com/articles/rake.html#DependencyBasedProgramming"&gt;dependency based programming model&lt;/a&gt; just like Rake, FAKE and similar build automation systems where you declare &lt;em&gt;tasks&lt;/em&gt; and the dependencies between those. When you execute a task, Cake will construct a directed acyclic graph containing all tasks and execute these in the correct order.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Task(&amp;quot;A&amp;quot;)
@@ -271,7 +271,7 @@ Task(&amp;quot;B&amp;quot;)
 RunTarget(&amp;quot;B&amp;quot;);
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The goal of Cake is to be a first class alternative to those who - like me - want to write their build scripts in C# instead of Ruby, F# or Powershell.&lt;/p&gt;
-&lt;p&gt;####What does a Cake script look like?&lt;/p&gt;
+&lt;h2 id="what-does-a-cake-script-look-like"&gt;What does a Cake script look like?&lt;/h2&gt;
 &lt;p&gt;Assume our build script have four steps where we want to:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Clean up old artifacts.&lt;/li&gt;
@@ -336,7 +336,7 @@ RunTarget(target);
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;This is just an example. Much more functionality is already implemented such as support for &lt;code&gt;MSBuild&lt;/code&gt;, &lt;code&gt;MSTest&lt;/code&gt;, &lt;code&gt;xUnit&lt;/code&gt;, &lt;code&gt;NUnit&lt;/code&gt;, &lt;code&gt;ILMerge&lt;/code&gt;, &lt;code&gt;NuGet pack/restore&lt;/code&gt; and the most common file system operations such as &lt;code&gt;file/folder manipulation&lt;/code&gt; and &lt;code&gt;globbing&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;To see an actual build script in action, fork or clone the &lt;a href="https://github.com/cake-build/cake"&gt;GitHub repository&lt;/a&gt; and run &lt;code&gt;build.cmd&lt;/code&gt; which will download Cake from NuGet and run the &lt;code&gt;build.cake&lt;/code&gt; script.&lt;/p&gt;
-&lt;p&gt;####What now?&lt;/p&gt;
+&lt;h2 id="what-now"&gt;What now?&lt;/h2&gt;
 &lt;p&gt;This was only supposed to be an introduction to Cake but I will blog more about this in the near future.&lt;/p&gt;
 &lt;p&gt;If you find this project interesting and want to help or you just have opinions about stuff, you can check out the full repository at &lt;a href="https://github.com/cake-build/cake"&gt;https://github.com/cake-build/cake&lt;/a&gt;.&lt;/p&gt;
 </content>
@@ -352,7 +352,7 @@ RunTarget(target);
 &lt;!--excerpt--&gt;
 &lt;p&gt;Cross-cutting concern or not; most developers normally won't argue against the dependency inversion principle, but when it comes to logging it all seem forgotten. One can understand that logging should be simple, but if we went down that path we could justify anything by the same standard.&lt;/p&gt;
 &lt;p&gt;A static singleton is to me (in 99.99% of the cases) a sign that something is wrong; a code smell regardless of the justifications that should be handled with caution.&lt;/p&gt;
-&lt;p&gt;####Where am I going with this?&lt;/p&gt;
+&lt;h2 id="where-am-i-going-with-this"&gt;Where am I going with this?&lt;/h2&gt;
 &lt;p&gt;I've started using the excellent &lt;a href="http://serilog.net/"&gt;Serilog&lt;/a&gt; recently, and I was glad to see that while it provides a static log facade doesn't seem to encourage it for any other reason than to be more easily adoptable by other frameworks. I just visited their &lt;a href="https://github.com/serilog/serilog/wiki/Getting-Started"&gt;GitHub page&lt;/a&gt;, and in the footer you can read:&lt;/p&gt;
 &lt;blockquote class="blockquote"&gt;
 &lt;p&gt;Configuring and using the Log class is an optional convenience that makes it easier for libraries to adopt Serilog. Serilog does not and will never adopt any static/process-wide state within the logging pipeline itself.&amp;quot;&amp;quot;.&lt;/p&gt;
@@ -371,20 +371,20 @@ RunTarget(target);
 &lt;!--excerpt--&gt;
 &lt;p&gt;Alas, MonoGame is a port of XNA, and since they need to maintain backwards compatibility; they also kept the &lt;a href="http://blogs.msdn.com/b/shawnhar/archive/2011/07/07/xnb-file-format-documentation.aspx"&gt;XNB output format&lt;/a&gt;. Since we had no wish to implement reading of the XNB format to be able to use MGCB, in combination with the difficulties involved with debugging the MGCB pipeline and the lack of unit tests, we decided to build something simple of our own.&lt;/p&gt;
 &lt;p&gt;&lt;img src="/images/bender.png" class="img-fluid" alt="Bender" /&gt;&lt;/p&gt;
-&lt;p&gt;####How does it work?&lt;/p&gt;
+&lt;h2 id="how-does-it-work"&gt;How does it work?&lt;/h2&gt;
 &lt;p&gt;The Lunt pipeline works almost exactly like the XNA Content pipeline. It's composed of two mandatory components (the importer and the writer) and one or many optional processors.&lt;/p&gt;
 &lt;p&gt;The importers role is to read asset data from a stream and to create a managed representation of it. If a processor is defined for an asset, the managed representation will be sent there to be either transformed (a change of type) or processed in some way. The last step in the pipeline is the actual writing of the asset back to a stream, and this is the writer's responsibility.&lt;/p&gt;
 &lt;p&gt;The stream I mention is normally a file stream, but can be any kind of stream thanks to the built-in extensibility points.&lt;/p&gt;
 &lt;p&gt;&lt;img src="/images/pipeline.png" class="img-fluid" alt="Pipeline" /&gt;&lt;/p&gt;
 &lt;p&gt;A more technical explaination of the pipeline can be found in the &lt;a href="https://github.com/lunt/lunt/wiki/Getting-started"&gt;Lunt Wiki&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;####Key points&lt;/p&gt;
+&lt;h2 id="key-points"&gt;Key points&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Build engine not tied to a specific hosting provider or output format.&lt;/li&gt;
 &lt;li&gt;Supports incremental builds.&lt;/li&gt;
 &lt;li&gt;Easy to debug the build pipeline by creating a debug project and referencing the Lunt build engine assembly.&lt;/li&gt;
 &lt;li&gt;The ease of C++/CLI to call into native libraries, makes it really simple to use existing functionality such as &lt;a href="http://assimp.sourceforge.net/"&gt;Assimp&lt;/a&gt; or &lt;a href="http://www.freetype.org/"&gt;FreeType&lt;/a&gt; as part of the pipeline.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;####Finally&lt;/p&gt;
+&lt;h2 id="finally"&gt;Finally&lt;/h2&gt;
 &lt;p&gt;I will probably continue to write posts about Lunt here from time to time, so if you're interested in knowing more, bookmark or add this blog to the RSS reader of your choice.&lt;/p&gt;
 &lt;p&gt;You can find the source code and more information on the GitHub page at &lt;a href="https://github.com/lunt/lunt"&gt;https://github.com/lunt/lunt&lt;/a&gt;.&lt;/p&gt;
 </content>

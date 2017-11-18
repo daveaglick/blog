@@ -112,7 +112,7 @@ Published on 19 augusti 2014<br>    </div>
 <p>Cake supports something called script aliases. Script aliases are convenience methods that are easily accessible directly from a Cake script. Every <a href="http://cake.readthedocs.org/en/latest/api-documentation.html">API method</a> in Cake is implemented like this.</p>
 <p>In this blog post I will show how to extend Cake with your own script aliases. It's really simple, I promise. ;-)</p>
 <!--excerpt-->
-<p>####Creating an extension</p>
+<h2 id="creating-an-extension">Creating an extension</h2>
 <p>Start by creating a new class library project and add a reference to the <code>Cake.Core</code> NuGet package.</p>
 <pre><code>PM&gt; Install-Package Cake.Core
 </code></pre>
@@ -136,7 +136,7 @@ public static class MyCakeExtension
    }
 }
 </code></pre>
-<p>####Using the extension</p>
+<h2 id="using-the-extension">Using the extension</h2>
 <p>Compile the assembly and add a reference to it in the build script via the <code>#r</code> directive.</p>
 <pre><code>#r &quot;tools/MyCakeExtension.dll&quot;
 </code></pre>
@@ -149,7 +149,7 @@ public static class MyCakeExtension
     Information(&quot;The answer to life: {0}&quot;, TheAnswerToLife);
 });
 </code></pre>
-<p>####Wrapping up</p>
+<h2 id="wrapping-up">Wrapping up</h2>
 <p>This covers the basics of how to create script aliases in Cake.<br />
 If you create a cool extension, tell me about it and I will link to it from the <a href="https://github.com/cake-build/cake">Cake repository</a>.</p>
 

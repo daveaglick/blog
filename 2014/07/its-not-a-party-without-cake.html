@@ -113,7 +113,7 @@ Published on 18 juli 2014<br>    </div>
 <p>About two months ago I decided to change that and now it's time to formally introduce Cake, which is short for C# Make.</p>
 <!--excerpt-->
 <p><img src="/images/cake-medium.png" class="img-fluid" alt="Build Status" /></p>
-<p>####What is Cake?</p>
+<h2 id="what-is-cake">What is Cake?</h2>
 <p>Cake is (like you probably already figured out) a build automation system with a C# DSL to do things like compiling code, copy files/folders, running unit tests, compress files and build NuGet packages.</p>
 <p>Cake uses a <a href="http://martinfowler.com/articles/rake.html#DependencyBasedProgramming">dependency based programming model</a> just like Rake, FAKE and similar build automation systems where you declare <em>tasks</em> and the dependencies between those. When you execute a task, Cake will construct a directed acyclic graph containing all tasks and execute these in the correct order.</p>
 <pre><code>Task(&quot;A&quot;)
@@ -130,7 +130,7 @@ Task(&quot;B&quot;)
 RunTarget(&quot;B&quot;);
 </code></pre>
 <p>The goal of Cake is to be a first class alternative to those who - like me - want to write their build scripts in C# instead of Ruby, F# or Powershell.</p>
-<p>####What does a Cake script look like?</p>
+<h2 id="what-does-a-cake-script-look-like">What does a Cake script look like?</h2>
 <p>Assume our build script have four steps where we want to:</p>
 <ol>
 <li>Clean up old artifacts.</li>
@@ -195,7 +195,7 @@ RunTarget(target);
 </code></pre>
 <p>This is just an example. Much more functionality is already implemented such as support for <code>MSBuild</code>, <code>MSTest</code>, <code>xUnit</code>, <code>NUnit</code>, <code>ILMerge</code>, <code>NuGet pack/restore</code> and the most common file system operations such as <code>file/folder manipulation</code> and <code>globbing</code>.</p>
 <p>To see an actual build script in action, fork or clone the <a href="https://github.com/cake-build/cake">GitHub repository</a> and run <code>build.cmd</code> which will download Cake from NuGet and run the <code>build.cake</code> script.</p>
-<p>####What now?</p>
+<h2 id="what-now">What now?</h2>
 <p>This was only supposed to be an introduction to Cake but I will blog more about this in the near future.</p>
 <p>If you find this project interesting and want to help or you just have opinions about stuff, you can check out the full repository at <a href="https://github.com/cake-build/cake">https://github.com/cake-build/cake</a>.</p>
 
