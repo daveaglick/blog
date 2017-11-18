@@ -4,7 +4,7 @@
 	<id>http://patriksvensson.se/</id>
 	<title>Patrik Svensson</title>
 	<rights>2017</rights>
-	<updated>2017-11-18T10:05:51Z</updated>
+	<updated>2017-11-18T10:17:45Z</updated>
 	<subtitle>Patrik Svensson</subtitle>
 	<entry>
 		<link href="http://patriksvensson.se/2017/11/using-embedded-resources-in-xunit-tests" />
@@ -16,7 +16,6 @@
 when I remembered something I wrote a while back that has proven to be quite useful.&lt;/p&gt;
 &lt;p&gt;The code in questions allows you to use embedded resources with &lt;a href="https://xunit.github.io/docs/getting-started-desktop.html#write-first-theory"&gt;xUnit's theory concept&lt;/a&gt;
 (which is similar to a &lt;code&gt;TestCase&lt;/code&gt; in NUnit).&lt;/p&gt;
-&lt;p&gt;The code is far from perfect, but short and straight forward enough to change to your hearts intent.&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-csharp"&gt;using System;
 using System.Collections.Generic;
 using System.IO;
@@ -69,7 +68,7 @@ namespace MyProject.Tests
     public sealed class JediCouncilFixture
     {
         [Theory]
-        [EmbeddedResourceData(&amp;quot;MyProject.Tests/Data/S.json&amp;quot;)]
+        [EmbeddedResourceData(&amp;quot;MyProject.Tests/Data/File.json&amp;quot;)]
         public void Should_Return_Expected_Advice_From_Jedi_Council(string json)
         {
             // Given
