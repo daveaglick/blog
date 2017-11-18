@@ -1,14 +1,15 @@
-System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
-Settings[Keys.Host] = "www.gep13.co.uk";
-Settings["Title"] = "Gary Ewan Park";
-Settings["Description"] = "Ramblings and Ponderings of a Microsoft Fan Boy...";
-Settings["Intro"] = "Hello, my name is Gary Ewan Park.  By day, I make a living as .Net Developer.  I am a husband and a father, and I enjoy contributing to Open Source projects.";
+System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("sv-SE");
+Settings[Keys.Host] = "patriksvensson.se";
+Settings["Title"] = "Patrik Svensson";
+Settings["Description"] = "Patrik Svensson";
+Settings["Intro"] = "This is my blog, where I write about stuff that interests me such as .NET, CI/CD and technology in general. I am a husband and a father, and I enjoy contributing to Open Source projects.";
 Settings[BlogKeys.PostsPath] = "blog";
 Settings[Keys.LinkLowercase] = true;
+Settings[BlogKeys.IncludeDateInPostPath] = true;
 
 Pipelines.Add("Feed2",
     Documents(Blog.BlogPosts),
-    GenerateFeeds().WithAtomPath(_ => "feed/index.xml"),
+    GenerateFeeds().WithAtomPath(_ => "rss.xml"),
     WriteFiles()
 );
 Pipelines.Add("Feed3",
@@ -16,3 +17,20 @@ Pipelines.Add("Feed3",
     GenerateFeeds().WithAtomPath(_ => "atom.xml"),
     WriteFiles()
 );
+
+int blogPostsIndex = Pipelines.IndexOf(Blog.BlogPosts);
+Pipelines.Remove(Blog.BlogPosts);
+Pipelines.Insert(
+    blogPostsIndex,
+    Blog.BlogPosts,
+    (IPipeline)new Wyam.Web.Pipelines.BlogPosts(
+        "BlogPosts",
+        new Wyam.Web.Pipelines.BlogPostsSettings
+        {
+            PublishedKey = BlogKeys.Published,
+            MarkdownConfiguration = ctx => ctx.String(BlogKeys.MarkdownConfiguration),
+            MarkdownExtensionTypes = ctx => ctx.List<Type>(BlogKeys.MarkdownExtensionTypes),
+            ProcessIncludes = (doc, ctx) => doc.Bool(BlogKeys.ProcessIncludes),
+            IncludeDateInPostPath = ctx => true,
+            PostsPath = ctx => ctx.Module.GetType().Name == "Meta" ? ctx.DirectoryPath(BlogKeys.PostsPath).Combine("..") : ctx.DirectoryPath(BlogKeys.PostsPath).FullPath
+        }));

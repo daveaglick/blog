@@ -5,3 +5,5 @@
 [Pp]ublish/
 nuget.exe
 BuildArtifacts/
+config.wyam.dll
+config.wyam.hash

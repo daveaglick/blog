@@ -1,4 +1,4 @@
-gep13
+Blog
 ========
 
-The code for the [gep13.co.uk](http://www.gep13.co.uk) website.
+The code for the [patriksvensson.se](http://patriksvensson.se) website.

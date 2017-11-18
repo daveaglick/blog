@@ -4,11 +4,11 @@ Environment.SetVariableNames();
 
 BuildParameters.SetParameters(context: Context,
                             buildSystem: BuildSystem,
-                            title: "gep13",
-                            repositoryOwner: "gep13",
-                            repositoryName: "gep13",
-                            appVeyorAccountName: "GaryEwanPark",
-                            webHost: "gep13.co.uk",
+                            title: "patriksvensson.se",
+                            repositoryOwner: "patriksvensson",
+                            repositoryName: "blog",
+                            appVeyorAccountName: "patrik",
+                            webHost: "patriksvensson.se",
                             shouldPurgeCloudflareCache: true);
 
 BuildParameters.PrintParameters(Context);
