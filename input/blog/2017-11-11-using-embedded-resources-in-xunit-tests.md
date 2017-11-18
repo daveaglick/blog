@@ -10,7 +10,7 @@ I was reading [Andrew Lock](https://andrewlock.net)'s excellent blog post about
 [Creating parameterised tests in xUnit](https://andrewlock.net/creating-parameterised-tests-in-xunit-with-inlinedata-classdata-and-memberdata)
 when I remembered something I wrote a while back that has proven to be quite useful.
 
-The code in questions allows you to use embedded resources with [xUnit's theory concept](https://xunit.github.io/docs/getting-started-desktop.html#write-first-theory)
+The code in question allows you to use embedded resources with [xUnit's theory concept](https://xunit.github.io/docs/getting-started-desktop.html#write-first-theory)
 (which is similar to a `TestCase` in NUnit).
 
 ```csharp
