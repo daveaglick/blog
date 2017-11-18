@@ -13,8 +13,6 @@ when I remembered something I wrote a while back that has proven to be quite use
 The code in questions allows you to use embedded resources with [xUnit's theory concept](https://xunit.github.io/docs/getting-started-desktop.html#write-first-theory)
 (which is similar to a `TestCase` in NUnit).
 
-The code is far from perfect, but short and straight forward enough to change to your hearts intent.
-
 ```csharp
 using System;
 using System.Collections.Generic;
@@ -71,7 +69,7 @@ namespace MyProject.Tests
     public sealed class JediCouncilFixture
     {
         [Theory]
-        [EmbeddedResourceData("MyProject.Tests/Data/S.json")]
+        [EmbeddedResourceData("MyProject.Tests/Data/File.json")]
         public void Should_Return_Expected_Advice_From_Jedi_Council(string json)
         {
             // Given
