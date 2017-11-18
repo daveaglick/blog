@@ -14,7 +14,7 @@ About two months ago I decided to change that and now it's time to formally intr
 
 ![Build Status](/images/cake-medium.png)
 
-####What is Cake?
+## What is Cake?
 
 Cake is (like you probably already figured out) a build automation system with a C# DSL to do things like compiling code, copy files/folders, running unit tests, compress files and build NuGet packages. 
 
@@ -35,7 +35,7 @@ Cake uses a [dependency based programming model](http://martinfowler.com/article
 
 The goal of Cake is to be a first class alternative to those who - like me - want to write their build scripts in C# instead of Ruby, F# or Powershell.
 
-####What does a Cake script look like?
+## What does a Cake script look like?
 
 Assume our build script have four steps where we want to:
 
@@ -105,7 +105,7 @@ This is just an example. Much more functionality is already implemented such as 
 
 To see an actual build script in action, fork or clone the [GitHub repository](https://github.com/cake-build/cake) and run `build.cmd` which will download Cake from NuGet and run the `build.cake` script.
 
-####What now?
+## What now?
 
 This was only supposed to be an introduction to Cake but I will blog more about this in the near future.
 

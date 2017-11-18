@@ -14,7 +14,7 @@ Alas, MonoGame is a port of XNA, and since they need to maintain backwards compa
 
 ![Bender](/images/bender.png)
 
-####How does it work?
+## How does it work?
 
 The Lunt pipeline works almost exactly like the XNA Content pipeline. It's composed of two mandatory components (the importer and the writer) and one or many optional processors. 
 
@@ -26,14 +26,14 @@ The stream I mention is normally a file stream, but can be any kind of stream th
 
 A more technical explaination of the pipeline can be found in the [Lunt Wiki](https://github.com/lunt/lunt/wiki/Getting-started).
 
-####Key points
+## Key points
 
 * Build engine not tied to a specific hosting provider or output format.
 * Supports incremental builds.
 * Easy to debug the build pipeline by creating a debug project and referencing the Lunt build engine assembly.
 * The ease of C++/CLI to call into native libraries, makes it really simple to use existing functionality such as [Assimp](http://assimp.sourceforge.net/) or [FreeType](http://www.freetype.org/) as part of the pipeline.
 
-####Finally
+## Finally
 
 I will probably continue to write posts about Lunt here from time to time, so if you're interested in knowing more, bookmark or add this blog to the RSS reader of your choice.
 

@@ -13,7 +13,7 @@ Cross-cutting concern or not; most developers normally won't argue against the d
 
 A static singleton is to me (in 99.99% of the cases) a sign that something is wrong; a code smell regardless of the justifications that should be handled with caution. 
 
-####Where am I going with this?
+## Where am I going with this?
 
 I've started using the excellent [Serilog](http://serilog.net/) recently, and I was glad to see that while it provides a static log facade doesn't seem to encourage it for any other reason than to be more easily adoptable by other frameworks. I just visited their [GitHub page](https://github.com/serilog/serilog/wiki/Getting-Started), and in the footer you can read:
 

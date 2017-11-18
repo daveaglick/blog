@@ -11,7 +11,7 @@ In this blog post I will show you how to use [Cake](https://github.com/cake-buil
 
 <!--excerpt-->
 
-####1. Create the build script
+## 1. Create the build script
 
 Add a build script called `build.cake` to the project root. In this tutorial, we'll just create a really simple build script for demonstration.
 
@@ -26,7 +26,7 @@ Add a build script called `build.cake` to the project root. In this tutorial, we
 
 	RunTarget(target);
 
-####2. Create a bootstrapper script
+## 2. Create a bootstrapper script
 
 Create a old fashioned batch file called `build.cmd` that will download Cake and execute the build script.
 
@@ -43,7 +43,7 @@ Create a old fashioned batch file called `build.cmd` that will download Cake and
 	echo Starting Cake...
 	tools\Cake\Cake.exe build.cake -target=Default -verbosity=diagnostic
 
-####3. Add NuGet.exe to your repository
+## 3. Add NuGet.exe to your repository
 
 Start by copying `NuGet.exe` to your tools folder. Cake uses the `tools` path as a convention for finding stuff it needs such as unit test runners and other tools.
 
@@ -53,13 +53,13 @@ Start by copying `NuGet.exe` to your tools folder. Cake uses the `tools` path as
   * build.cake
   * build.cmd
 
-####4. Tell AppVeyor what to do
+## 4. Tell AppVeyor what to do
 
 Now we need to tell AppVeyor how to start the Cake build. Do this by setting the build script for your AppVeyor project to `build.cmd`. Save your settings and you should be done.
 
 ![AppVeyor Build Settings](/images/cake-appveyor-build-settings.png)
 
-####5. Profit
+## 5. Profit
 
 The next triggered build will now execute the Cake build script as expected.
 

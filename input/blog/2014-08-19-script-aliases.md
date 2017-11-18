@@ -12,7 +12,7 @@ In this blog post I will show how to extend Cake with your own script aliases. I
 
 <!--excerpt-->
 
-####Creating an extension
+## Creating an extension
 
 Start by creating a new class library project and add a reference to the `Cake.Core` NuGet package.
 
@@ -40,7 +40,7 @@ You could also add an script alias property, which works the same way as a scrip
        }
     }
 
-####Using the extension
+## Using the extension
 
 Compile the assembly and add a reference to it in the build script via the `#r` directive.
 
@@ -56,7 +56,7 @@ Now you should be able to call the method from the script.
         Information("The answer to life: {0}", TheAnswerToLife);
     });
 
-####Wrapping up
+## Wrapping up
 
 This covers the basics of how to create script aliases in Cake.  
 If you create a cool extension, tell me about it and I will link to it from the [Cake repository](https://github.com/cake-build/cake).

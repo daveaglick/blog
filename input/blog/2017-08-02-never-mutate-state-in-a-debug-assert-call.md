@@ -15,6 +15,6 @@ The problem with the above statement is that calls to `Debug.Assert` are conditi
 so when running under a non-debug build, the call won't be made and the expression
 won't be evaluated.
 
-#### So what lessons can we learn from this?
+## So what lessons can we learn from this?
 
 Never mutate state in a `Debug.Assert` call.
