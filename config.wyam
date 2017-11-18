@@ -6,15 +6,14 @@ Settings["Intro"] = "This is my blog, where I write about stuff that interests m
 Settings[BlogKeys.PostsPath] = "blog";
 Settings[Keys.LinkLowercase] = true;
 Settings[BlogKeys.IncludeDateInPostPath] = true;
+Settings[BlogKeys.RssPath] = "rss.xml";
+Settings[BlogKeys.AtomPath] = "feed.xml";
 
 Pipelines.Add("Feed2",
     Documents(Blog.BlogPosts),
-    GenerateFeeds().WithAtomPath(_ => "rss.xml"),
-    WriteFiles()
-);
-Pipelines.Add("Feed3",
-    Documents(Blog.BlogPosts),
-    GenerateFeeds().WithAtomPath(_ => "atom.xml"),
+    GenerateFeeds()
+        .WithRssPath(_ => "rss.xml")
+        .WithAtomPath(_ => "feed.xml"),
     WriteFiles()
 );
 
