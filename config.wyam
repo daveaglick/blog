@@ -33,3 +33,15 @@ Pipelines.Insert(
             IncludeDateInPostPath = ctx => true,
             PostsPath = ctx => ctx.Module.GetType().Name == "Meta" ? ctx.DirectoryPath(BlogKeys.PostsPath).Combine("..") : ctx.DirectoryPath(BlogKeys.PostsPath).FullPath
         }));
+
+// Adds files to the root for each blog post
+Pipelines.Add("RootPosts",
+    Documents(Blog.RenderBlogPosts),
+    WriteFiles(@doc.FilePath(Keys.RelativeFilePath).FileName.ChangeExtension(".html")));
+
+// Adds folders to the root with nested index pages for each blog post (to support a trailing slash)
+/*
+Pipelines.Add("RootPosts",
+    Documents(Blog.RenderBlogPosts),
+    WriteFiles(new DirectoryPath(@doc.FilePath(Keys.RelativeFilePath).FileNameWithoutExtension.FullPath).CombineFile("index.html")));
+*/
