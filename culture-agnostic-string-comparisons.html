@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Patrik Svensson</title>
+        <title>Patrik Svensson - Culture agnostic string comparisons</title>
         <meta name="description" content="Patrik Svensson" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="Patrik Svensson" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Patrik Svensson" />
+        <meta property="og:title" content="Patrik Svensson - Culture agnostic string comparisons" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://patriksvensson.se/" />
+        <meta property="og:url" content="http://patriksvensson.se/2013/08/culture-agnostic-string-comparisons" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="/assets/js/jquery.min.js"></script>
@@ -87,10 +87,15 @@
                                 <div class="row">
                                         <div class="col-md-12">
 
-    <div class="site-heading">
-        <h1>Patrik Svensson</h1>
-                <hr class="small">
-        <span class="subheading">This is my blog, where I write about stuff that interests me such as .NET, CI/CD and technology in general. I am a husband and a father, and I enjoy contributing to Open Source projects.</span>
+    
+<div class="post-heading">
+    <h1>Culture agnostic string comparisons</h1>
+    <div class="meta">        
+Published on 22 augusti 2013<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/net" class="btn btn-default btn-xs">.NET</a>
+                    <a role="button" href="/tags/c%23" class="btn btn-default btn-xs">C#</a>
+        </div>     
 </div>
                                         </div>
                                 </div>
@@ -102,89 +107,42 @@
                         <div class="row">
                                 <div id="content" class="col-md-12">
                                         
-<div class="row">
-    <div class="col-sm-8 right-border">
-                <div class="post-preview">
-                    <a href="/2017/11/using-embedded-resources-in-xunit-tests">
-                        <h2 class="post-title">Using embedded resources in xUnit tests</h2>
-                    </a>
-                    <p class="post-meta">Posted on 11 november 2017</p>
-<p>I was reading <a href="https://andrewlock.net">Andrew Lock</a>'s excellent blog post about
-<a href="https://andrewlock.net/creating-parameterised-tests-in-xunit-with-inlinedata-classdata-and-memberdata">Creating parameterised tests in xUnit</a>
-when I remembered something I wrote a while back that has proven to be quite useful.</p>                </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/2017/08/never-mutate-state-in-a-debug-assert-call">
-                        <h2 class="post-title">Never mutate state in a Debug.Assert call</h2>
-                    </a>
-                    <p class="post-meta">Posted on 02 augusti 2017</p>
-<p>Yesterday I encountered a bug in a library I'm working on that only seemed
-to occur when compiled in release mode. I was scratching my head for a little
-while but suddenly it occured to me when I encountered the following line:</p>                </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/2016/12/azure-web-apps-and-the-certificate-store">
-                        <h2 class="post-title">Azure Web Apps and the certificate store</h2>
-                    </a>
-                    <p class="post-meta">Posted on 07 december 2016</p>
-<p>I was trying to load a certificate from the certificate store in an Azure Web App today,
-and for some reason I could not find it via it's thumbprint. Since I thought I was
-looking in the wrong certificate store, I went to <a href="https://github.com/projectkudu/kudu">Kudu</a>
-to take a closer look via the PowerShell debug console.</p>                </div>       
-        <ul class="pager">
-            <li class="previous">                
-            </li>
-            <li class="next">
-            </li>
-        </ul>
-    </div>
-    <div class="col-sm-4 sidebar">
-        <hr class="visible-xs-block" />
 
-            <h5>Tags</h5>
-            <div>
-                    <a role="button" href="/tags/net" class="btn btn-default btn-sm"> .NET (10)</a>
-                    <a role="button" href="/tags/c%23" class="btn btn-default btn-sm"> C# (7)</a>
-                    <a role="button" href="/tags/cake" class="btn btn-default btn-sm"> Cake (3)</a>
-                    <a role="button" href="/tags/azure" class="btn btn-default btn-sm"> Azure (1)</a>
-                    <a role="button" href="/tags/github" class="btn btn-default btn-sm"> GitHub (1)</a>
-                    <a role="button" href="/tags/logging" class="btn btn-default btn-sm"> Logging (1)</a>
-                    <a role="button" href="/tags/c&#x2B;&#x2B;" class="btn btn-default btn-sm"> C&#x2B;&#x2B; (1)</a>
-                    <a role="button" href="/tags/teamcity" class="btn btn-default btn-sm"> TeamCity (1)</a>
-                    <a role="button" href="/tags/appveyor" class="btn btn-default btn-sm"> AppVeyor (1)</a>
-                    <a role="button" href="/tags/xunit" class="btn btn-default btn-sm"> xUnit (1)</a>
-            </div>
-            <ul class="pager">
-                <li class="next">
-                    <a href="/tags">View All Tags &rarr;</a>
-                </li>
-            </ul>
+<p>Something I've seen a lot at different clients is naive string comparison. The most common case is to do something involving String.ToLower() on both strings that are being compared and then an equality comparison of the result.</p>
+<!--excerpt-->
+<p>This is not always the correct way of doing it, and especially not if you at some point in time want people who's using different culture settings than you to run your application. You can read more about this problem in <a href="http://www.codinghorror.com/blog/2008/03/whats-wrong-with-turkey.html">this excellent blog post by Jeff Atwood</a>.</p>
+<p>What you should do is simply to use the overloads of the <a href="http://msdn.microsoft.com/en-us/library/c64xh8f9.aspx">String.Equals</a> method that takes a <code>StringComparison</code>, or use a <a href="http://msdn.microsoft.com/en-us/library/system.stringcomparer.aspx">StringComparer</a> directly.</p>
+<pre><code>[Fact]
+public void Test_String_Equality()
+{
+   // Given
+   string first = &quot;HELLO WORLD&quot;;
+   string second = &quot;hello world&quot;;
 
-            <hr />
-            <h5>Older Posts</h5>
-            <ul class="list-unstyled">
-                    <li><a href="/2014/11/cake-and-appveyor-integration">Cake and AppVeyor integration</a></li>
-                    <li><a href="/2014/08/script-aliases">Script aliases</a></li>
-                    <li><a href="/2014/07/its-not-a-party-without-cake">It&#x27;s not a party without Cake</a></li>
-                    <li><a href="/2014/06/the-singleton-logger">The singleton logger</a></li>
-            </ul>
-                <ul class="pager">
-                    <li class="next">
-                        <a href="/blog">Archive &rarr;</a>
-                    </li>
-                </ul>
+   // When
+   bool result = first.Equals(second, StringComparison.OrdinalIgnoreCase);
 
-        <hr />
-<h5>Contact</h5>
-<ul class="list-unstyled">
-    <li><a href="https://twitter.com/firstdrafthell"><i class="fa fa-twitter"></i> Twitter</a></li>
-    <li><a href="https://github.com/patriksvensson"><i class="fa fa-github"></i> GitHub</a></li>
-    <li><a href="https://keybase.io/patrik"><i class="fa fa-key"></i> Keybase</a></li>
-    <li><a href="https://stackoverflow.com/users/936/patrik"><i class="fa fa-stack-overflow"></i> Stack Overflow</a></li>
-    <li><a href="https://www.linkedin.com/in/psvensson82"><i class="fa fa-linkedin"></i> LinkedIn</a></li>
-</ul>
-    </div> 
-</div>
+   // Then
+   Assert.True(result);
+}
+</code></pre>
+<p>The <code>StringComparer</code> is also very valuable to use with collections when you need to do a lookup for a specific string (i.e. <code>HashSet&lt;string&gt;</code> or <code>IDictionary&lt;String, T&gt;</code>).</p>
+<pre><code>[Fact]
+public void Test_String_Lookup()
+{
+   // Given
+   var dictionary = new Dictionary&lt;string, int&gt;(StringComparer.OrdinalIgnoreCase);
+   dictionary.Add(&quot;HELLO WORLD&quot;, 42);
+
+   // When
+   var result = dictionary.ContainsKey(&quot;hello world&quot;);
+
+   // Then
+   Assert.True(result);
+}
+</code></pre>
+
+
 
                                 </div>
                         </div>

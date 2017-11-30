@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Patrik Svensson</title>
+        <title>Patrik Svensson - Cake and AppVeyor integration</title>
         <meta name="description" content="Patrik Svensson" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="Patrik Svensson" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Patrik Svensson" />
+        <meta property="og:title" content="Patrik Svensson - Cake and AppVeyor integration" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://patriksvensson.se/" />
+        <meta property="og:url" content="http://patriksvensson.se/2014/11/cake-and-appveyor-integration" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="/assets/js/jquery.min.js"></script>
@@ -87,10 +87,17 @@
                                 <div class="row">
                                         <div class="col-md-12">
 
-    <div class="site-heading">
-        <h1>Patrik Svensson</h1>
-                <hr class="small">
-        <span class="subheading">This is my blog, where I write about stuff that interests me such as .NET, CI/CD and technology in general. I am a husband and a father, and I enjoy contributing to Open Source projects.</span>
+    
+<div class="post-heading">
+    <h1>Cake and AppVeyor integration</h1>
+    <div class="meta">        
+Published on 23 november 2014<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/net" class="btn btn-default btn-xs">.NET</a>
+                    <a role="button" href="/tags/appveyor" class="btn btn-default btn-xs">AppVeyor</a>
+                    <a role="button" href="/tags/c%23" class="btn btn-default btn-xs">C#</a>
+                    <a role="button" href="/tags/cake" class="btn btn-default btn-xs">Cake</a>
+        </div>     
 </div>
                                         </div>
                                 </div>
@@ -102,89 +109,61 @@
                         <div class="row">
                                 <div id="content" class="col-md-12">
                                         
-<div class="row">
-    <div class="col-sm-8 right-border">
-                <div class="post-preview">
-                    <a href="/2017/11/using-embedded-resources-in-xunit-tests">
-                        <h2 class="post-title">Using embedded resources in xUnit tests</h2>
-                    </a>
-                    <p class="post-meta">Posted on 11 november 2017</p>
-<p>I was reading <a href="https://andrewlock.net">Andrew Lock</a>'s excellent blog post about
-<a href="https://andrewlock.net/creating-parameterised-tests-in-xunit-with-inlinedata-classdata-and-memberdata">Creating parameterised tests in xUnit</a>
-when I remembered something I wrote a while back that has proven to be quite useful.</p>                </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/2017/08/never-mutate-state-in-a-debug-assert-call">
-                        <h2 class="post-title">Never mutate state in a Debug.Assert call</h2>
-                    </a>
-                    <p class="post-meta">Posted on 02 augusti 2017</p>
-<p>Yesterday I encountered a bug in a library I'm working on that only seemed
-to occur when compiled in release mode. I was scratching my head for a little
-while but suddenly it occured to me when I encountered the following line:</p>                </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/2016/12/azure-web-apps-and-the-certificate-store">
-                        <h2 class="post-title">Azure Web Apps and the certificate store</h2>
-                    </a>
-                    <p class="post-meta">Posted on 07 december 2016</p>
-<p>I was trying to load a certificate from the certificate store in an Azure Web App today,
-and for some reason I could not find it via it's thumbprint. Since I thought I was
-looking in the wrong certificate store, I went to <a href="https://github.com/projectkudu/kudu">Kudu</a>
-to take a closer look via the PowerShell debug console.</p>                </div>       
-        <ul class="pager">
-            <li class="previous">                
-            </li>
-            <li class="next">
-            </li>
-        </ul>
-    </div>
-    <div class="col-sm-4 sidebar">
-        <hr class="visible-xs-block" />
 
-            <h5>Tags</h5>
-            <div>
-                    <a role="button" href="/tags/net" class="btn btn-default btn-sm"> .NET (10)</a>
-                    <a role="button" href="/tags/c%23" class="btn btn-default btn-sm"> C# (7)</a>
-                    <a role="button" href="/tags/cake" class="btn btn-default btn-sm"> Cake (3)</a>
-                    <a role="button" href="/tags/azure" class="btn btn-default btn-sm"> Azure (1)</a>
-                    <a role="button" href="/tags/github" class="btn btn-default btn-sm"> GitHub (1)</a>
-                    <a role="button" href="/tags/logging" class="btn btn-default btn-sm"> Logging (1)</a>
-                    <a role="button" href="/tags/c&#x2B;&#x2B;" class="btn btn-default btn-sm"> C&#x2B;&#x2B; (1)</a>
-                    <a role="button" href="/tags/teamcity" class="btn btn-default btn-sm"> TeamCity (1)</a>
-                    <a role="button" href="/tags/appveyor" class="btn btn-default btn-sm"> AppVeyor (1)</a>
-                    <a role="button" href="/tags/xunit" class="btn btn-default btn-sm"> xUnit (1)</a>
-            </div>
-            <ul class="pager">
-                <li class="next">
-                    <a href="/tags">View All Tags &rarr;</a>
-                </li>
-            </ul>
+<p>In this blog post I will show you how to use <a href="https://github.com/cake-build/cake">Cake</a> with your AppVeyor CI builds.</p>
+<!--excerpt-->
+<h2 id="create-the-build-script">1. Create the build script</h2>
+<p>Add a build script called <code>build.cake</code> to the project root. In this tutorial, we'll just create a really simple build script for demonstration.</p>
+<pre><code>// Get the target.
+var target = Argument&lt;string&gt;(&quot;target&quot;, &quot;Default&quot;);
 
-            <hr />
-            <h5>Older Posts</h5>
-            <ul class="list-unstyled">
-                    <li><a href="/2014/11/cake-and-appveyor-integration">Cake and AppVeyor integration</a></li>
-                    <li><a href="/2014/08/script-aliases">Script aliases</a></li>
-                    <li><a href="/2014/07/its-not-a-party-without-cake">It&#x27;s not a party without Cake</a></li>
-                    <li><a href="/2014/06/the-singleton-logger">The singleton logger</a></li>
-            </ul>
-                <ul class="pager">
-                    <li class="next">
-                        <a href="/blog">Archive &rarr;</a>
-                    </li>
-                </ul>
+Task(&quot;Default&quot;)
+  .Does(() =&gt;
+{
+	Information(&quot;Hello from Cake!&quot;);
+});
 
-        <hr />
-<h5>Contact</h5>
-<ul class="list-unstyled">
-    <li><a href="https://twitter.com/firstdrafthell"><i class="fa fa-twitter"></i> Twitter</a></li>
-    <li><a href="https://github.com/patriksvensson"><i class="fa fa-github"></i> GitHub</a></li>
-    <li><a href="https://keybase.io/patrik"><i class="fa fa-key"></i> Keybase</a></li>
-    <li><a href="https://stackoverflow.com/users/936/patrik"><i class="fa fa-stack-overflow"></i> Stack Overflow</a></li>
-    <li><a href="https://www.linkedin.com/in/psvensson82"><i class="fa fa-linkedin"></i> LinkedIn</a></li>
+RunTarget(target);
+</code></pre>
+<h2 id="create-a-bootstrapper-script">2. Create a bootstrapper script</h2>
+<p>Create a old fashioned batch file called <code>build.cmd</code> that will download Cake and execute the build script.</p>
+<pre><code>&#64;echo off
+
+:Build
+cls
+
+if not exist tools\Cake\Cake.exe ( 
+	echo Installing Cake...
+	tools\NuGet.exe install Cake -OutputDirectory tools -ExcludeVersion -NonInteractive -Prerelease
+)
+
+echo Starting Cake...
+tools\Cake\Cake.exe build.cake -target=Default -verbosity=diagnostic
+</code></pre>
+<h2 id="add-nuget.exe-to-your-repository">3. Add NuGet.exe to your repository</h2>
+<p>Start by copying <code>NuGet.exe</code> to your tools folder. Cake uses the <code>tools</code> path as a convention for finding stuff it needs such as unit test runners and other tools.</p>
+<ul>
+<li>MyProject/
+<ul>
+<li>tools/
+<ul>
+<li><strong>NuGet.exe</strong></li>
 </ul>
-    </div> 
-</div>
+</li>
+<li>build.cake</li>
+<li>build.cmd</li>
+</ul>
+</li>
+</ul>
+<h2 id="tell-appveyor-what-to-do">4. Tell AppVeyor what to do</h2>
+<p>Now we need to tell AppVeyor how to start the Cake build. Do this by setting the build script for your AppVeyor project to <code>build.cmd</code>. Save your settings and you should be done.</p>
+<p><img src="/images/cake-appveyor-build-settings.png" class="img-fluid" alt="AppVeyor Build Settings" /></p>
+<h2 id="profit">5. Profit</h2>
+<p>The next triggered build will now execute the Cake build script as expected.</p>
+<p><img src="/images/cake-appveyor-profit.png" class="img-fluid" alt="AppVeyor Build" /></p>
+<p>For more information about Cake, see <a href="http://cake.readthedocs.org">http://cake.readthedocs.org</a>.</p>
+
+
 
                                 </div>
                         </div>

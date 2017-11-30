@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Patrik Svensson</title>
+        <title>Patrik Svensson - How to dynamically add attributes to a class with Castle.Core</title>
         <meta name="description" content="Patrik Svensson" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="Patrik Svensson" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Patrik Svensson" />
+        <meta property="og:title" content="Patrik Svensson - How to dynamically add attributes to a class with Castle.Core" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://patriksvensson.se/" />
+        <meta property="og:url" content="http://patriksvensson.se/2013/08/how-to-dynamically-add-attributes-to-a-class-with-castle-core" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="/assets/js/jquery.min.js"></script>
@@ -87,10 +87,16 @@
                                 <div class="row">
                                         <div class="col-md-12">
 
-    <div class="site-heading">
-        <h1>Patrik Svensson</h1>
-                <hr class="small">
-        <span class="subheading">This is my blog, where I write about stuff that interests me such as .NET, CI/CD and technology in general. I am a husband and a father, and I enjoy contributing to Open Source projects.</span>
+    
+<div class="post-heading">
+    <h1>How to dynamically add attributes to a class with Castle.Core</h1>
+    <div class="meta">        
+Published on 15 augusti 2013<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/net" class="btn btn-default btn-xs">.NET</a>
+                    <a role="button" href="/tags/c%23" class="btn btn-default btn-xs">C#</a>
+                    <a role="button" href="/tags/unit-testing" class="btn btn-default btn-xs">Unit testing</a>
+        </div>     
 </div>
                                         </div>
                                 </div>
@@ -102,89 +108,78 @@
                         <div class="row">
                                 <div id="content" class="col-md-12">
                                         
-<div class="row">
-    <div class="col-sm-8 right-border">
-                <div class="post-preview">
-                    <a href="/2017/11/using-embedded-resources-in-xunit-tests">
-                        <h2 class="post-title">Using embedded resources in xUnit tests</h2>
-                    </a>
-                    <p class="post-meta">Posted on 11 november 2017</p>
-<p>I was reading <a href="https://andrewlock.net">Andrew Lock</a>'s excellent blog post about
-<a href="https://andrewlock.net/creating-parameterised-tests-in-xunit-with-inlinedata-classdata-and-memberdata">Creating parameterised tests in xUnit</a>
-when I remembered something I wrote a while back that has proven to be quite useful.</p>                </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/2017/08/never-mutate-state-in-a-debug-assert-call">
-                        <h2 class="post-title">Never mutate state in a Debug.Assert call</h2>
-                    </a>
-                    <p class="post-meta">Posted on 02 augusti 2017</p>
-<p>Yesterday I encountered a bug in a library I'm working on that only seemed
-to occur when compiled in release mode. I was scratching my head for a little
-while but suddenly it occured to me when I encountered the following line:</p>                </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/2016/12/azure-web-apps-and-the-certificate-store">
-                        <h2 class="post-title">Azure Web Apps and the certificate store</h2>
-                    </a>
-                    <p class="post-meta">Posted on 07 december 2016</p>
-<p>I was trying to load a certificate from the certificate store in an Azure Web App today,
-and for some reason I could not find it via it's thumbprint. Since I thought I was
-looking in the wrong certificate store, I went to <a href="https://github.com/projectkudu/kudu">Kudu</a>
-to take a closer look via the PowerShell debug console.</p>                </div>       
-        <ul class="pager">
-            <li class="previous">                
-            </li>
-            <li class="next">
-            </li>
-        </ul>
-    </div>
-    <div class="col-sm-4 sidebar">
-        <hr class="visible-xs-block" />
 
-            <h5>Tags</h5>
-            <div>
-                    <a role="button" href="/tags/net" class="btn btn-default btn-sm"> .NET (10)</a>
-                    <a role="button" href="/tags/c%23" class="btn btn-default btn-sm"> C# (7)</a>
-                    <a role="button" href="/tags/cake" class="btn btn-default btn-sm"> Cake (3)</a>
-                    <a role="button" href="/tags/azure" class="btn btn-default btn-sm"> Azure (1)</a>
-                    <a role="button" href="/tags/github" class="btn btn-default btn-sm"> GitHub (1)</a>
-                    <a role="button" href="/tags/logging" class="btn btn-default btn-sm"> Logging (1)</a>
-                    <a role="button" href="/tags/c&#x2B;&#x2B;" class="btn btn-default btn-sm"> C&#x2B;&#x2B; (1)</a>
-                    <a role="button" href="/tags/teamcity" class="btn btn-default btn-sm"> TeamCity (1)</a>
-                    <a role="button" href="/tags/appveyor" class="btn btn-default btn-sm"> AppVeyor (1)</a>
-                    <a role="button" href="/tags/xunit" class="btn btn-default btn-sm"> xUnit (1)</a>
-            </div>
-            <ul class="pager">
-                <li class="next">
-                    <a href="/tags">View All Tags &rarr;</a>
-                </li>
-            </ul>
+<p>Yesterday I was working on some unit tests that ensured that some user derived classes passed to a method were decorated with a specific attribute.</p>
+<!--excerpt-->
+<p>Since the mocking framework I used (<a href="https://code.google.com/p/moq/">Moq</a>) did not support dynamically adding of attributes to a mocked type, my first approach was simply to create some private test classes that contained different permutations of the specified attribute, like this:</p>
+<pre><code>[TheAttribute(5)]
+public class FakeClassWithAnAttributeSetToANumberLessThanTen
+{
+}
 
-            <hr />
-            <h5>Older Posts</h5>
-            <ul class="list-unstyled">
-                    <li><a href="/2014/11/cake-and-appveyor-integration">Cake and AppVeyor integration</a></li>
-                    <li><a href="/2014/08/script-aliases">Script aliases</a></li>
-                    <li><a href="/2014/07/its-not-a-party-without-cake">It&#x27;s not a party without Cake</a></li>
-                    <li><a href="/2014/06/the-singleton-logger">The singleton logger</a></li>
-            </ul>
-                <ul class="pager">
-                    <li class="next">
-                        <a href="/blog">Archive &rarr;</a>
-                    </li>
-                </ul>
+[TheAttribute(15)]
+public class FakeClassWithAnAttributeSetToANumberGreaterThanTen
+{
+}
 
-        <hr />
-<h5>Contact</h5>
-<ul class="list-unstyled">
-    <li><a href="https://twitter.com/firstdrafthell"><i class="fa fa-twitter"></i> Twitter</a></li>
-    <li><a href="https://github.com/patriksvensson"><i class="fa fa-github"></i> GitHub</a></li>
-    <li><a href="https://keybase.io/patrik"><i class="fa fa-key"></i> Keybase</a></li>
-    <li><a href="https://stackoverflow.com/users/936/patrik"><i class="fa fa-stack-overflow"></i> Stack Overflow</a></li>
-    <li><a href="https://www.linkedin.com/in/psvensson82"><i class="fa fa-linkedin"></i> LinkedIn</a></li>
-</ul>
-    </div> 
-</div>
+[TheAttribute(10, DefaultStuffz=Stuffz.Random)]
+public class FakeClassWithAnAttributeSetWithDefaultStuffz
+{
+}
+</code></pre>
+<p>Alas, as the amount of tests grew, I realized that this wasn't a viable solution.</p>
+<p>Finally I found a quite nice solution by using <a href="http://www.castleproject.org/projects/dynamicproxy/">Castle.DynamicProxy</a> available in the Castle project. I have personally never used the Castle framework before, but the experience using it was quite nice.</p>
+<pre><code>public class MyClass
+{
+}
+
+[AttributeUsage(AttributeTargets.Class)]
+public class MyClassAttribute : Attribute
+{
+}
+</code></pre>
+<p>To create an instance of <code>MyClass</code>, dynamically decorated with a <code>MyClassAttribute</code> you simply do as below.</p>
+<pre><code>public static MyClass CreateClassDecoratedWithAttribute()
+{
+	// Get the attribute constructor.
+	Type[] ctorTypes = Type.EmptyTypes;
+	var ctor = typeof(MyClassAttribute).GetConstructor(ctorTypes);
+	Debug.Assert(ctor != null, &quot;Could not get constructor for attribute.&quot;);
+
+	// Create an attribute builder.
+	object[] attributeArguments = new object[] { };
+	var builder = new System.Reflection.Emit.CustomAttributeBuilder(ctor, attributeArguments);
+
+	// Create the proxy generation options.
+    // This is how we tell Castle.DynamicProxy how to create the attribute.
+	var proxyOptions = new Castle.DynamicProxy.ProxyGenerationOptions();
+	proxyOptions.AdditionalAttributes.Add(builder);
+
+	// Create the proxy generator.
+	var proxyGenerator = new Castle.DynamicProxy.ProxyGenerator();
+
+	// Create the class proxy.
+	var classArguments = new object[] { };
+	return (MyClass)proxyGenerator.CreateClassProxy(typeof(MyClass), proxyOptions, classArguments);
+}
+</code></pre>
+<p>And now you can test that this actually works.</p>
+<pre><code>[Fact]
+public void Created_Class_Should_Be_Decorated_With_Attribute()
+{
+	// Given
+	var myClass = CreateClassDecoratedWithAttribute();
+
+	// When
+	var attribute = myClass.GetType().GetCustomAttributes(typeof(MyClassAttribute), true)[0];
+
+	// Then
+	Assert.NotNull(attribute);
+    Assert.IsType&lt;MyClassAttribute&gt;(attribute);
+}
+</code></pre>
+
+
 
                                 </div>
                         </div>
