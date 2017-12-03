@@ -4,8 +4,15 @@
 	<id>http://patriksvensson.se/</id>
 	<title>Patrik Svensson</title>
 	<rights>2017</rights>
-	<updated>2017-11-30T15:40:28Z</updated>
+	<updated>2017-12-03T22:02:35Z</updated>
 	<subtitle>Patrik Svensson</subtitle>
+	<entry>
+		<link href="http://patriksvensson.se/2017/12/conditionals-in-xaml" />
+		<id>http://patriksvensson.se/2017/12/conditionals-in-xaml</id>
+		<title>Conditionals in XAML</title>
+		<updated>2017-12-03T00:00:00Z</updated>
+		<summary>Patrik Svensson</summary>
+	</entry>
 	<entry>
 		<link href="http://patriksvensson.se/2017/11/using-embedded-resources-in-xunit-tests" />
 		<id>http://patriksvensson.se/2017/11/using-embedded-resources-in-xunit-tests</id>
@@ -90,7 +97,64 @@
 		<updated>2013-08-15T00:00:00Z</updated>
 		<summary>Patrik Svensson</summary>
 	</entry>
-</feed>tate-state-in-a-debug-assert-call</id>
+</feed>    public override IEnumerable&amp;lt;object[]&amp;gt; GetData(MethodInfo testMethod)
+        {
+            var result = new object[_args.Length];
+            for (var index = 0; index &amp;lt; _args.Length; index++)
+            {
+                result[index] = ReadManifestData(_args[index]);
+            }
+            return new[] { result };
+        }
+
+        public static string ReadManifestData(string resourceName)
+        {
+            var assembly = typeof(EmbeddedResourceDataAttribute).GetTypeInfo().Assembly;
+            resourceName = resourceName.Replace(&amp;quot;/&amp;quot;, &amp;quot;.&amp;quot;);
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null)
+                {
+                    throw new InvalidOperationException(&amp;quot;Could not load manifest resource stream.&amp;quot;);
+                }
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can now use embedded resources in your tests like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;namespace MyProject.Tests
+{
+    public sealed class JediCouncilFixture
+    {
+        [Theory]
+        [EmbeddedResourceData(&amp;quot;MyProject.Tests/Data/File.json&amp;quot;)]
+        public void Should_Return_Expected_Advice_From_Jedi_Council(string json)
+        {
+            // Given
+            var expected = JsonConvert.DeserializeObject&amp;lt;Advice&amp;gt;(json);
+
+            // When
+            var result = JediCouncil.AskForAdvice();
+
+            // Then
+            Assert.Equal(expected, result, new AdviceComparer());
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+		<summary>&lt;p&gt;I was reading &lt;a href="https://andrewlock.net"&gt;Andrew Lock&lt;/a&gt;'s excellent blog post about
+&lt;a href="https://andrewlock.net/creating-parameterised-tests-in-xunit-with-inlinedata-classdata-and-memberdata"&gt;Creating parameterised tests in xUnit&lt;/a&gt;
+when I remembered something I wrote a while back that has proven to be quite useful.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2017/08/never-mutate-state-in-a-debug-assert-call" />
+		<id>http://patriksvensson.se/2017/08/never-mutate-state-in-a-debug-assert-call</id>
 		<title>Never mutate state in a Debug.Assert call</title>
 		<updated>2017-08-02T00:00:00Z</updated>
 		<content>&lt;p&gt;Yesterday I encountered a bug in a library I'm working on that only seemed

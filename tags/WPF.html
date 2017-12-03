@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Patrik Svensson - Cake and AppVeyor integration</title>
+        <title>Patrik Svensson - WPF</title>
         <meta name="description" content="Patrik Svensson" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="Patrik Svensson" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Patrik Svensson - Cake and AppVeyor integration" />
+        <meta property="og:title" content="Patrik Svensson - WPF" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://patriksvensson.se/2014/11/cake-and-appveyor-integration" />
+        <meta property="og:url" content="http://patriksvensson.se/tags/wpf" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="/assets/js/jquery.min.js"></script>
@@ -86,20 +86,9 @@
                         <div class="container">
                                 <div class="row">
                                         <div class="col-md-12">
-
-    
-<div class="post-heading">
-    <h1>Cake and AppVeyor integration</h1>
-    <div class="meta">        
-Published on 23 november 2014<br>    </div>
-        <div class="tags">
-                    <a role="button" href="/tags/net" class="btn btn-default btn-xs">.NET</a>
-                    <a role="button" href="/tags/appveyor" class="btn btn-default btn-xs">AppVeyor</a>
-                    <a role="button" href="/tags/c%23" class="btn btn-default btn-xs">C#</a>
-                    <a role="button" href="/tags/cake" class="btn btn-default btn-xs">Cake</a>
-        </div>     
-</div>
-                                        </div>
+<div class="site-heading">
+    <h1>WPF</h1>
+</div>                                            </div>
                                 </div>
                         </div>
                 </header>
@@ -108,63 +97,44 @@ Published on 23 november 2014<br>    </div>
                 <div class="container">
                         <div class="row">
                                 <div id="content" class="col-md-12">
-                                        
-
-<p>In this blog post I will show you how to use <a href="https://github.com/cake-build/cake">Cake</a> with your AppVeyor CI builds.</p>
-<!--excerpt-->
-<h2 id="create-the-build-script">1. Create the build script</h2>
-<p>Add a build script called <code>build.cake</code> to the project root. In this tutorial, we'll just create a really simple build script for demonstration.</p>
-<pre><code>// Get the target.
-var target = Argument&lt;string&gt;(&quot;target&quot;, &quot;Default&quot;);
-
-Task(&quot;Default&quot;)
-  .Does(() =&gt;
-{
-	Information(&quot;Hello from Cake!&quot;);
-});
-
-RunTarget(target);
-</code></pre>
-<h2 id="create-a-bootstrapper-script">2. Create a bootstrapper script</h2>
-<p>Create a old fashioned batch file called <code>build.cmd</code> that will download Cake and execute the build script.</p>
-<pre><code>&#64;echo off
-
-:Build
-cls
-
-if not exist tools\Cake\Cake.exe ( 
-	echo Installing Cake...
-	tools\NuGet.exe install Cake -OutputDirectory tools -ExcludeVersion -NonInteractive -Prerelease
-)
-
-echo Starting Cake...
-tools\Cake\Cake.exe build.cake -target=Default -verbosity=diagnostic
-</code></pre>
-<h2 id="add-nuget.exe-to-your-repository">3. Add NuGet.exe to your repository</h2>
-<p>Start by copying <code>NuGet.exe</code> to your tools folder. Cake uses the <code>tools</code> path as a convention for finding stuff it needs such as unit test runners and other tools.</p>
-<ul>
-<li>MyProject/
-<ul>
-<li>tools/
-<ul>
-<li><strong>NuGet.exe</strong></li>
-</ul>
-</li>
-<li>build.cake</li>
-<li>build.cmd</li>
-</ul>
-</li>
-</ul>
-<h2 id="tell-appveyor-what-to-do">4. Tell AppVeyor what to do</h2>
-<p>Now we need to tell AppVeyor how to start the Cake build. Do this by setting the build script for your AppVeyor project to <code>build.cmd</code>. Save your settings and you should be done.</p>
-<p><img src="/images/cake-appveyor-build-settings.png" class="img-fluid" alt="AppVeyor Build Settings" /></p>
-<h2 id="profit">5. Profit</h2>
-<p>The next triggered build will now execute the Cake build script as expected.</p>
-<p><img src="/images/cake-appveyor-profit.png" class="img-fluid" alt="AppVeyor Build" /></p>
-<p>For more information about Cake, see <a href="http://cake.readthedocs.org">http://cake.readthedocs.org</a>.</p>
+                                        <div class="container-sm-height">
+    <div class="row row-sm-height">
+        <div class="col-sm-8 right-border col-sm-height">
+                    <div class="post-list">
+            <a href="/2017/12/conditionals-in-xaml">
+                <h3 class="post-title">Conditionals in XAML</h3>
+            </a>
+            <p class="post-meta">Posted on 03 december 2017</p>      
+        </div>   
 
 
-
+            <nav>
+                <ul class="pager">
+                    <li class="previous">                
+                    </li>
+                    <li class="next">
+                    </li>
+                </ul>
+            </nav>
+            <hr class="visible-xs-block" />
+        </div>
+		
+        <div class="col-sm-4 col-sm-height">
+                <a role="button" href="/tags/net" class="btn btn-default btn-xs">.NET (11)</a>
+                <a role="button" href="/tags/c%23" class="btn btn-default btn-xs">C# (8)</a>
+                <a role="button" href="/tags/cake" class="btn btn-default btn-xs">Cake (3)</a>
+                <a role="button" href="/tags/wpf" class="btn btn-primary btn-xs">WPF (1)</a>
+                <a role="button" href="/tags/xunit" class="btn btn-default btn-xs">xUnit (1)</a>
+                <a role="button" href="/tags/azure" class="btn btn-default btn-xs">Azure (1)</a>
+                <a role="button" href="/tags/appveyor" class="btn btn-default btn-xs">AppVeyor (1)</a>
+                <a role="button" href="/tags/logging" class="btn btn-default btn-xs">Logging (1)</a>
+                <a role="button" href="/tags/teamcity" class="btn btn-default btn-xs">TeamCity (1)</a>
+                <a role="button" href="/tags/github" class="btn btn-default btn-xs">GitHub (1)</a>
+                <a role="button" href="/tags/c&#x2B;&#x2B;" class="btn btn-default btn-xs">C&#x2B;&#x2B; (1)</a>
+                <a role="button" href="/tags/unit-testing" class="btn btn-default btn-xs">Unit testing (1)</a>
+        </div>
+    </div>
+</div>
                                 </div>
                         </div>
                 </div>

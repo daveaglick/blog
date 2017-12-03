@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Patrik Svensson - Using embedded resources in xUnit tests</title>
+        <title>Patrik Svensson - Conditionals in XAML</title>
         <meta name="description" content="Patrik Svensson" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="Patrik Svensson" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Patrik Svensson - Using embedded resources in xUnit tests" />
+        <meta property="og:title" content="Patrik Svensson - Conditionals in XAML" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://patriksvensson.se/2017/11/using-embedded-resources-in-xunit-tests" />
+        <meta property="og:url" content="http://patriksvensson.se/2017/12/conditionals-in-xaml" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="/assets/js/jquery.min.js"></script>
@@ -89,13 +89,13 @@
 
     
 <div class="post-heading">
-    <h1>Using embedded resources in xUnit tests</h1>
+    <h1>Conditionals in XAML</h1>
     <div class="meta">        
-Published on 11 november 2017<br>    </div>
+Published on 03 december 2017<br>    </div>
         <div class="tags">
                     <a role="button" href="/tags/net" class="btn btn-default btn-xs">.NET</a>
                     <a role="button" href="/tags/c%23" class="btn btn-default btn-xs">C#</a>
-                    <a role="button" href="/tags/xunit" class="btn btn-default btn-xs">xUnit</a>
+                    <a role="button" href="/tags/wpf" class="btn btn-default btn-xs">WPF</a>
         </div>     
 </div>
                                         </div>
@@ -109,78 +109,34 @@ Published on 11 november 2017<br>    </div>
                                 <div id="content" class="col-md-12">
                                         
 
-<p>I was reading <a href="https://andrewlock.net">Andrew Lock</a>'s excellent blog post about
-<a href="https://andrewlock.net/creating-parameterised-tests-in-xunit-with-inlinedata-classdata-and-memberdata">Creating parameterised tests in xUnit</a>
-when I remembered something I wrote a while back that has proven to be quite useful.</p>
-<p>The code in question allows you to use embedded resources with <a href="https://xunit.github.io/docs/getting-started-desktop.html#write-first-theory">xUnit's theory concept</a>
-(which is similar to a <code>TestCase</code> in NUnit).</p>
-<pre><code class="language-csharp">using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using Xunit.Sdk;
-
-namespace MyProject.Tests
-{
-    public sealed class EmbeddedResourceDataAttribute : DataAttribute
-    {
-        private readonly string[] _args;
-
-        public EmbeddedResourceDataAttribute(params string[] args)
-        {
-            _args = args;
-        }
-
-        public override IEnumerable&lt;object[]&gt; GetData(MethodInfo testMethod)
-        {
-            var result = new object[_args.Length];
-            for (var index = 0; index &lt; _args.Length; index++)
-            {
-                result[index] = ReadManifestData(_args[index]);
-            }
-            return new[] { result };
-        }
-
-        public static string ReadManifestData(string resourceName)
-        {
-            var assembly = typeof(EmbeddedResourceDataAttribute).GetTypeInfo().Assembly;
-            resourceName = resourceName.Replace(&quot;/&quot;, &quot;.&quot;);
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new InvalidOperationException(&quot;Could not load manifest resource stream.&quot;);
-                }
-                using (var reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
-    }
-}
+<p>Ever wanted to display things conditionally in XAML based on a pre-processor directive like <code>DEBUG</code>?</p>
+<p>Start by adding the following to your <code>AssemblyInfo.cs</code></p>
+<pre><code>#if DEBUG
+[assembly: XmlnsDefinition(&quot;http://github.com/me/myproject/debug&quot;, &quot;MyProjectNamespace&quot;)]
+#endif
 </code></pre>
-<p>You can now use embedded resources in your tests like this:</p>
-<pre><code class="language-csharp">namespace MyProject.Tests
-{
-    public sealed class JediCouncilFixture
-    {
-        [Theory]
-        [EmbeddedResourceData(&quot;MyProject.Tests/Data/File.json&quot;)]
-        public void Should_Return_Expected_Advice_From_Jedi_Council(string json)
-        {
-            // Given
-            var expected = JsonConvert.DeserializeObject&lt;Advice&gt;(json);
+<p>Now, in your XAML file, you should be able to add a new namespace pointing to this definition. We also need to import the <a href="https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/markup-compatibility-mc-language-features">XAML compatibility</a> namespace. To suppress the errors given by the XAML processor, use the <code>mc:Ignorable</code> attribute.</p>
+<p>You should now be able to use <code>AlternateContent</code>, <code>Choice</code> and <code>Fallback</code> elements in your XAML code to show
+different elements depending on your build configuration.</p>
+<pre><code class="language-xaml">&lt;Window x:Class=&quot;MyProjectNamespace.MyView&quot;
+    xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+    xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+    xmlns:mc=&quot;http://schemas.openxmlformats.org/markup-compatibility/2006&quot;
+    xmlns:debug=&quot;http://github.com/me/myproject/debug&quot;
+    mc:Ignorable=&quot;mc&quot;&gt;
 
-            // When
-            var result = JediCouncil.AskForAdvice();
+    &lt;mc:AlternateContent&gt;
+        &lt;mc:Choice Requires=&quot;debug&quot;&gt;
+            &lt;TextBlock Text=&quot;Debugging!&quot; /&gt;
+        &lt;/mc:Choice&gt;
+        &lt;mc:Fallback&gt;
+            &lt;TextBlock Text=&quot;Not debugging!&quot; /&gt;
+        &lt;/mc:Fallback&gt;
+    &lt;/mc:AlternateContent&gt;
 
-            // Then
-            Assert.Equal(expected, result, new AdviceComparer());
-        }
-    }
-}
+&lt;/Window&gt;
 </code></pre>
+<p>Be aware that content within <code>AlternateContent</code> will not show in the designer. If this is something you need, I recommend that you use a different technique.</p>
 
 
 
