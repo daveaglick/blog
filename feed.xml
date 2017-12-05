@@ -4,7 +4,7 @@
 	<id>http://patriksvensson.se/</id>
 	<title>Patrik Svensson</title>
 	<rights>2017</rights>
-	<updated>2017-12-03T22:02:35Z</updated>
+	<updated>2017-12-05T12:08:24Z</updated>
 	<subtitle>Patrik Svensson</subtitle>
 	<entry>
 		<link href="http://patriksvensson.se/2017/12/conditionals-in-xaml" />
@@ -97,7 +97,26 @@
 		<updated>2013-08-15T00:00:00Z</updated>
 		<summary>Patrik Svensson</summary>
 	</entry>
-</feed>    public override IEnumerable&amp;lt;object[]&amp;gt; GetData(MethodInfo testMethod)
+</feed>t;a href="https://xunit.github.io/docs/getting-started-desktop.html#write-first-theory"&gt;xUnit's theory concept&lt;/a&gt;
+(which is similar to a &lt;code&gt;TestCase&lt;/code&gt; in NUnit).&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using Xunit.Sdk;
+
+namespace MyProject.Tests
+{
+    public sealed class EmbeddedResourceDataAttribute : DataAttribute
+    {
+        private readonly string[] _args;
+
+        public EmbeddedResourceDataAttribute(params string[] args)
+        {
+            _args = args;
+        }
+
+        public override IEnumerable&amp;lt;object[]&amp;gt; GetData(MethodInfo testMethod)
         {
             var result = new object[_args.Length];
             for (var index = 0; index &amp;lt; _args.Length; index++)

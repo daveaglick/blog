@@ -116,7 +116,7 @@ Published on 03 december 2017<br>    </div>
 #endif
 </code></pre>
 <p>Now, in your XAML file, you should be able to add a new namespace pointing to this definition. We also need to import the <a href="https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/markup-compatibility-mc-language-features">XAML compatibility</a> namespace. To suppress the errors given by the XAML processor, use the <code>mc:Ignorable</code> attribute.</p>
-<p>You should now be able to use <code>AlternateContent</code>, <code>Choice</code> and <code>Fallback</code> elements in your XAML code to show
+<p>You should now be able to use <code>AlternateContent</code>, <code>Choice</code> and (optionally) <code>Fallback</code> elements in your XAML code to show
 different elements depending on your build configuration.</p>
 <pre><code class="language-xaml">&lt;Window x:Class=&quot;MyProjectNamespace.MyView&quot;
     xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
@@ -137,6 +137,10 @@ different elements depending on your build configuration.</p>
 &lt;/Window&gt;
 </code></pre>
 <p>Be aware that content within <code>AlternateContent</code> will not show in the designer. If this is something you need, I recommend that you use a different technique.</p>
+<p><strong>Update (2017-12-05)</strong></p>
+<p>The <code>AlternateContent</code> element doesn't seem to be supported in UWP applications.</p>
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">WPF only. The attribute does not exist in UWP.</p>&mdash; diederik krols (&#64;diederikkrols) <a href="https://twitter.com/diederikkrols/status/937942865484898305?ref_src=twsrc%5Etfw">December 5, 2017</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
 
