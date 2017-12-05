@@ -18,7 +18,7 @@ Start by adding the following to your `AssemblyInfo.cs`
 
 Now, in your XAML file, you should be able to add a new namespace pointing to this definition. We also need to import the [XAML compatibility](https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/markup-compatibility-mc-language-features) namespace. To suppress the errors given by the XAML processor, use the `mc:Ignorable` attribute.
 
-You should now be able to use `AlternateContent`, `Choice` and `Fallback` elements in your XAML code to show
+You should now be able to use `AlternateContent`, `Choice` and (optionally) `Fallback` elements in your XAML code to show
 different elements depending on your build configuration.
 
 
@@ -43,3 +43,10 @@ different elements depending on your build configuration.
 ```
 
 Be aware that content within `AlternateContent` will not show in the designer. If this is something you need, I recommend that you use a different technique.
+
+**Update (2017-12-05)**  
+
+The `AlternateContent` element doesn't seem to be supported in UWP applications.
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">WPF only. The attribute does not exist in UWP.</p>&mdash; diederik krols (@diederikkrols) <a href="https://twitter.com/diederikkrols/status/937942865484898305?ref_src=twsrc%5Etfw">December 5, 2017</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
