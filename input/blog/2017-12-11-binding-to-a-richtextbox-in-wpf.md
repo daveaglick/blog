@@ -6,7 +6,7 @@ Tags:
 - WPF
 ---
 
-I've been doing some WPF development last couple of weeks, and one thing that bugged me was that there is no way (as far as I know) to bind content to a `RichTextBox`. This makes it kind of difficult to follow the MVVM pattern since the view model needs intimate knowledge of the view.
+I've been doing some WPF development the last couple of weeks, and one thing that bugged me was that there is no way (as far as I know) to bind content to a `RichTextBox`. This makes it kind of difficult to follow the MVVM pattern since the view model needs intimate knowledge of the view.
 
 In my case, I wanted to bind the textbox against a resource using a `pack://` URI, so I threw together some code to do this. I am far from an expert on WPF, so if you have any suggestions then please let me know!
 
