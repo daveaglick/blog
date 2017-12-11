@@ -5,8 +5,15 @@
 		<link>http://patriksvensson.se/</link>
 		<description>Patrik Svensson</description>
 		<copyright>2017</copyright>
-		<pubDate>Tue, 05 Dec 2017 12:08:24 GMT</pubDate>
-		<lastBuildDate>Tue, 05 Dec 2017 12:08:24 GMT</lastBuildDate>
+		<pubDate>Mon, 11 Dec 2017 09:30:07 GMT</pubDate>
+		<lastBuildDate>Mon, 11 Dec 2017 09:30:07 GMT</lastBuildDate>
+		<item>
+			<title>Binding to a RichTextBox in WPF</title>
+			<link>http://patriksvensson.se/2017/12/binding-to-a-richtextbox-in-wpf</link>
+			<description>Patrik Svensson</description>
+			<guid>http://patriksvensson.se/2017/12/binding-to-a-richtextbox-in-wpf</guid>
+			<pubDate>Mon, 11 Dec 2017 00:00:00 GMT</pubDate>
+		</item>
 		<item>
 			<title>Conditionals in XAML</title>
 			<link>http://patriksvensson.se/2017/12/conditionals-in-xaml</link>
@@ -99,7 +106,44 @@
 			<pubDate>Thu, 15 Aug 2013 00:00:00 GMT</pubDate>
 		</item>
 	</channel>
-</rss>ting parameterised tests in xUnit&lt;/a&gt;
+</rss>c-language-features"&gt;XAML compatibility&lt;/a&gt; namespace. To suppress the errors given by the XAML processor, use the &lt;code&gt;mc:Ignorable&lt;/code&gt; attribute.&lt;/p&gt;
+&lt;p&gt;You should now be able to use &lt;code&gt;AlternateContent&lt;/code&gt;, &lt;code&gt;Choice&lt;/code&gt; and (optionally) &lt;code&gt;Fallback&lt;/code&gt; elements in your XAML code to show
+different elements depending on your build configuration.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xaml"&gt;&amp;lt;Window x:Class=&amp;quot;MyProjectNamespace.MyView&amp;quot;
+    xmlns=&amp;quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&amp;quot;
+    xmlns:x=&amp;quot;http://schemas.microsoft.com/winfx/2006/xaml&amp;quot;
+    xmlns:mc=&amp;quot;http://schemas.openxmlformats.org/markup-compatibility/2006&amp;quot;
+    xmlns:debug=&amp;quot;http://github.com/me/myproject/debug&amp;quot;
+    mc:Ignorable=&amp;quot;mc&amp;quot;&amp;gt;
+
+    &amp;lt;mc:AlternateContent&amp;gt;
+        &amp;lt;mc:Choice Requires=&amp;quot;debug&amp;quot;&amp;gt;
+            &amp;lt;TextBlock Text=&amp;quot;Debugging!&amp;quot; /&amp;gt;
+        &amp;lt;/mc:Choice&amp;gt;
+        &amp;lt;mc:Fallback&amp;gt;
+            &amp;lt;TextBlock Text=&amp;quot;Not debugging!&amp;quot; /&amp;gt;
+        &amp;lt;/mc:Fallback&amp;gt;
+    &amp;lt;/mc:AlternateContent&amp;gt;
+
+&amp;lt;/Window&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Be aware that content within &lt;code&gt;AlternateContent&lt;/code&gt; will not show in the designer. If this is something you need, I recommend that you use a different technique.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update (2017-12-05)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;AlternateContent&lt;/code&gt; element doesn't seem to be supported in UWP applications.&lt;/p&gt;
+&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;WPF only. The attribute does not exist in UWP.&lt;/p&gt;&amp;mdash; diederik krols (&amp;#64;diederikkrols) &lt;a href="https://twitter.com/diederikkrols/status/937942865484898305?ref_src=twsrc%5Etfw"&gt;December 5, 2017&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>Using embedded resources in xUnit tests</title>
+			<link>http://patriksvensson.se/2017/11/using-embedded-resources-in-xunit-tests</link>
+			<description>&lt;p&gt;I was reading &lt;a href="https://andrewlock.net"&gt;Andrew Lock&lt;/a&gt;'s excellent blog post about
+&lt;a href="https://andrewlock.net/creating-parameterised-tests-in-xunit-with-inlinedata-classdata-and-memberdata"&gt;Creating parameterised tests in xUnit&lt;/a&gt;
+when I remembered something I wrote a while back that has proven to be quite useful.&lt;/p&gt;</description>
+			<guid>http://patriksvensson.se/2017/11/using-embedded-resources-in-xunit-tests</guid>
+			<pubDate>Sat, 11 Nov 2017 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;I was reading &lt;a href="https://andrewlock.net"&gt;Andrew Lock&lt;/a&gt;'s excellent blog post about
+&lt;a href="https://andrewlock.net/creating-parameterised-tests-in-xunit-with-inlinedata-classdata-and-memberdata"&gt;Creating parameterised tests in xUnit&lt;/a&gt;
 when I remembered something I wrote a while back that has proven to be quite useful.&lt;/p&gt;
 &lt;p&gt;The code in question allows you to use embedded resources with &lt;a href="https://xunit.github.io/docs/getting-started-desktop.html#write-first-theory"&gt;xUnit's theory concept&lt;/a&gt;
 (which is similar to a &lt;code&gt;TestCase&lt;/code&gt; in NUnit).&lt;/p&gt;

@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Patrik Svensson - C&#x2B;&#x2B;</title>
+        <title>Patrik Svensson - Binding to a RichTextBox in WPF</title>
         <meta name="description" content="Patrik Svensson" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="Patrik Svensson" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Patrik Svensson - C&#x2B;&#x2B;" />
+        <meta property="og:title" content="Patrik Svensson - Binding to a RichTextBox in WPF" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://patriksvensson.se/tags/c&#x2B;&#x2B;" />
+        <meta property="og:url" content="http://patriksvensson.se/2017/12/binding-to-a-richtextbox-in-wpf" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="/assets/js/jquery.min.js"></script>
@@ -86,9 +86,19 @@
                         <div class="container">
                                 <div class="row">
                                         <div class="col-md-12">
-<div class="site-heading">
-    <h1>C&#x2B;&#x2B;</h1>
-</div>                                            </div>
+
+    
+<div class="post-heading">
+    <h1>Binding to a RichTextBox in WPF</h1>
+    <div class="meta">        
+Published on 11 december 2017<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/net" class="btn btn-default btn-xs">.NET</a>
+                    <a role="button" href="/tags/c%23" class="btn btn-default btn-xs">C#</a>
+                    <a role="button" href="/tags/wpf" class="btn btn-default btn-xs">WPF</a>
+        </div>     
+</div>
+                                        </div>
                                 </div>
                         </div>
                 </header>
@@ -97,44 +107,62 @@
                 <div class="container">
                         <div class="row">
                                 <div id="content" class="col-md-12">
-                                        <div class="container-sm-height">
-    <div class="row row-sm-height">
-        <div class="col-sm-8 right-border col-sm-height">
-                    <div class="post-list">
-            <a href="/2013/12/binarywriter-and-cplusplus">
-                <h3 class="post-title">System.IO.BinaryWriter and C&#x2B;&#x2B;</h3>
-            </a>
-            <p class="post-meta">Posted on 16 december 2013</p>      
-        </div>   
+                                        
+
+<p>I've been doing some WPF development last couple of weeks, and one thing that bugged me was that there is no way (as far as I know) to bind content to a <code>RichTextBox</code>. This makes it kind of difficult to follow the MVVM pattern since the view model needs intimate knowledge of the view.</p>
+<p>In my case, I wanted to bind the textbox against a resource using a <code>pack://</code> URI, so I threw together some code to do this. I am far from an expert on WPF, so if you have any suggestions then please let me know!</p>
+<pre><code class="language-csharp">using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+
+namespace MyApp.Controls
+{
+    public sealed class BindableRichTextBox : RichTextBox
+    {
+        public static readonly DependencyProperty SourceProperty =
+            DependencyProperty.Register(&quot;Source&quot;,
+                typeof(Uri), typeof(BindableRichTextBox),
+                new PropertyMetadata(OnSourceChanged));
+
+        public Uri Source
+        {
+            get =&gt; GetValue(SourceProperty) as Uri;
+            set =&gt; SetValue(SourceProperty, value);
+        }
+
+        private static void OnSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is BindableRichTextBox rtf &amp;&amp; rtf.Source != null)
+            {
+                var stream = Application.GetResourceStream(rtf.Source);
+                if (stream != null)
+                {
+                    var range = new TextRange(rtf.Document.ContentStart, rtf.Document.ContentEnd);
+                    range.Load(stream.Stream, DataFormats.Rtf);
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<p>You can now use a binding as you normally would in your XAML (or simply set it directly).</p>
+<pre><code class="language-xml">&lt;Window x:Class=&quot;MyApp.MyView&quot;
+        xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+        xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+        xmlns:d=&quot;http://schemas.microsoft.com/expression/blend/2008&quot;
+        xmlns:mc=&quot;http://schemas.openxmlformats.org/markup-compatibility/2006&quot;
+        xmlns:ui=&quot;clr-namespace:MyApp.Controls&quot;
+        mc:Ignorable=&quot;d&quot;&gt;
+    &lt;StackPanel&gt;
+        &lt;ui:BindableRichTextBox Source=&quot;{Binding Licenses}&quot; /&gt;
+        &lt;ui:BindableRichTextBox Source=&quot;pack://application:,,,/MyApp;component/MyApp/Resources/Document.rtf&quot; /&gt;
+    &lt;/StackPanel&gt;
+&lt;/Window&gt;
+</code></pre>
 
 
-            <nav>
-                <ul class="pager">
-                    <li class="previous">                
-                    </li>
-                    <li class="next">
-                    </li>
-                </ul>
-            </nav>
-            <hr class="visible-xs-block" />
-        </div>
-		
-        <div class="col-sm-4 col-sm-height">
-                <a role="button" href="/tags/net" class="btn btn-default btn-xs">.NET (12)</a>
-                <a role="button" href="/tags/c%23" class="btn btn-default btn-xs">C# (9)</a>
-                <a role="button" href="/tags/cake" class="btn btn-default btn-xs">Cake (3)</a>
-                <a role="button" href="/tags/wpf" class="btn btn-default btn-xs">WPF (2)</a>
-                <a role="button" href="/tags/xunit" class="btn btn-default btn-xs">xUnit (1)</a>
-                <a role="button" href="/tags/azure" class="btn btn-default btn-xs">Azure (1)</a>
-                <a role="button" href="/tags/appveyor" class="btn btn-default btn-xs">AppVeyor (1)</a>
-                <a role="button" href="/tags/logging" class="btn btn-default btn-xs">Logging (1)</a>
-                <a role="button" href="/tags/teamcity" class="btn btn-default btn-xs">TeamCity (1)</a>
-                <a role="button" href="/tags/github" class="btn btn-default btn-xs">GitHub (1)</a>
-                <a role="button" href="/tags/c&#x2B;&#x2B;" class="btn btn-primary btn-xs">C&#x2B;&#x2B; (1)</a>
-                <a role="button" href="/tags/unit-testing" class="btn btn-default btn-xs">Unit testing (1)</a>
-        </div>
-    </div>
-</div>
+
                                 </div>
                         </div>
                 </div>
