@@ -4,9 +4,16 @@
 		<title>Patrik Svensson</title>
 		<link>http://patriksvensson.se/</link>
 		<description>Patrik Svensson</description>
-		<copyright>2017</copyright>
-		<pubDate>Mon, 11 Dec 2017 10:12:21 GMT</pubDate>
-		<lastBuildDate>Mon, 11 Dec 2017 10:12:21 GMT</lastBuildDate>
+		<copyright>2018</copyright>
+		<pubDate>Wed, 31 Jan 2018 16:04:28 GMT</pubDate>
+		<lastBuildDate>Wed, 31 Jan 2018 16:04:28 GMT</lastBuildDate>
+		<item>
+			<title>Calculating product versions for MSI packages compatible with semantic versioning</title>
+			<link>http://patriksvensson.se/2018/01/calculating-msi-product-version</link>
+			<description>Patrik Svensson</description>
+			<guid>http://patriksvensson.se/2018/01/calculating-msi-product-version</guid>
+			<pubDate>Tue, 30 Jan 2018 00:00:00 GMT</pubDate>
+		</item>
 		<item>
 			<title>Binding to a RichTextBox in WPF</title>
 			<link>http://patriksvensson.se/2017/12/binding-to-a-richtextbox-in-wpf</link>
@@ -106,7 +113,70 @@
 			<pubDate>Thu, 15 Aug 2013 00:00:00 GMT</pubDate>
 		</item>
 	</channel>
-</rss>bility-mc-language-features"&gt;XAML compatibility&lt;/a&gt; namespace. To suppress the errors given by the XAML processor, use the &lt;code&gt;mc:Ignorable&lt;/code&gt; attribute.&lt;/p&gt;
+</rss>t;pre&gt;&lt;code class="language-csharp"&gt;using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+
+namespace MyApp.Controls
+{
+    public sealed class BindableRichTextBox : RichTextBox
+    {
+        public static readonly DependencyProperty SourceProperty =
+            DependencyProperty.Register(&amp;quot;Source&amp;quot;,
+                typeof(Uri), typeof(BindableRichTextBox),
+                new PropertyMetadata(OnSourceChanged));
+
+        public Uri Source
+        {
+            get =&amp;gt; GetValue(SourceProperty) as Uri;
+            set =&amp;gt; SetValue(SourceProperty, value);
+        }
+
+        private static void OnSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is BindableRichTextBox rtf &amp;amp;&amp;amp; rtf.Source != null)
+            {
+                var stream = Application.GetResourceStream(rtf.Source);
+                if (stream != null)
+                {
+                    var range = new TextRange(rtf.Document.ContentStart, rtf.Document.ContentEnd);
+                    range.Load(stream.Stream, DataFormats.Rtf);
+                }
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can now use a binding as you normally would in your XAML (or simply set it directly).&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;Window x:Class=&amp;quot;MyApp.MyView&amp;quot;
+        xmlns=&amp;quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&amp;quot;
+        xmlns:x=&amp;quot;http://schemas.microsoft.com/winfx/2006/xaml&amp;quot;
+        xmlns:d=&amp;quot;http://schemas.microsoft.com/expression/blend/2008&amp;quot;
+        xmlns:mc=&amp;quot;http://schemas.openxmlformats.org/markup-compatibility/2006&amp;quot;
+        xmlns:ui=&amp;quot;clr-namespace:MyApp.Controls&amp;quot;
+        mc:Ignorable=&amp;quot;d&amp;quot;&amp;gt;
+    &amp;lt;StackPanel&amp;gt;
+        &amp;lt;ui:BindableRichTextBox Source=&amp;quot;{Binding Licenses}&amp;quot; /&amp;gt;
+        &amp;lt;ui:BindableRichTextBox Source=&amp;quot;pack://application:,,,/MyApp;component/MyApp/Resources/Document.rtf&amp;quot; /&amp;gt;
+    &amp;lt;/StackPanel&amp;gt;
+&amp;lt;/Window&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>Conditionals in XAML</title>
+			<link>http://patriksvensson.se/2017/12/conditionals-in-xaml</link>
+			<description>&lt;p&gt;Ever wanted to display things conditionally in XAML based on a pre-processor directive like &lt;code&gt;DEBUG&lt;/code&gt;?&lt;/p&gt;</description>
+			<guid>http://patriksvensson.se/2017/12/conditionals-in-xaml</guid>
+			<pubDate>Sun, 03 Dec 2017 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Ever wanted to display things conditionally in XAML based on a pre-processor directive like &lt;code&gt;DEBUG&lt;/code&gt;?&lt;/p&gt;
+&lt;p&gt;Start by adding the following to your &lt;code&gt;AssemblyInfo.cs&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#if DEBUG
+[assembly: XmlnsDefinition(&amp;quot;http://github.com/me/myproject/debug&amp;quot;, &amp;quot;MyProjectNamespace&amp;quot;)]
+#endif
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, in your XAML file, you should be able to add a new namespace pointing to this definition. We also need to import the &lt;a href="https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/markup-compatibility-mc-language-features"&gt;XAML compatibility&lt;/a&gt; namespace. To suppress the errors given by the XAML processor, use the &lt;code&gt;mc:Ignorable&lt;/code&gt; attribute.&lt;/p&gt;
 &lt;p&gt;You should now be able to use &lt;code&gt;AlternateContent&lt;/code&gt;, &lt;code&gt;Choice&lt;/code&gt; and (optionally) &lt;code&gt;Fallback&lt;/code&gt; elements in your XAML code to show
 different elements depending on your build configuration.&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-xaml"&gt;&amp;lt;Window x:Class=&amp;quot;MyProjectNamespace.MyView&amp;quot;

@@ -3,9 +3,16 @@
 	<link rel="self" href="http://patriksvensson.se/" />
 	<id>http://patriksvensson.se/</id>
 	<title>Patrik Svensson</title>
-	<rights>2017</rights>
-	<updated>2017-12-11T10:12:21Z</updated>
+	<rights>2018</rights>
+	<updated>2018-01-31T16:04:28Z</updated>
 	<subtitle>Patrik Svensson</subtitle>
+	<entry>
+		<link href="http://patriksvensson.se/2018/01/calculating-msi-product-version" />
+		<id>http://patriksvensson.se/2018/01/calculating-msi-product-version</id>
+		<title>Calculating product versions for MSI packages compatible with semantic versioning</title>
+		<updated>2018-01-30T00:00:00Z</updated>
+		<summary>Patrik Svensson</summary>
+	</entry>
 	<entry>
 		<link href="http://patriksvensson.se/2017/12/binding-to-a-richtextbox-in-wpf" />
 		<id>http://patriksvensson.se/2017/12/binding-to-a-richtextbox-in-wpf</id>
@@ -104,7 +111,67 @@
 		<updated>2013-08-15T00:00:00Z</updated>
 		<summary>Patrik Svensson</summary>
 	</entry>
-</feed>et/framework/wpf/advanced/markup-compatibility-mc-language-features"&gt;XAML compatibility&lt;/a&gt; namespace. To suppress the errors given by the XAML processor, use the &lt;code&gt;mc:Ignorable&lt;/code&gt; attribute.&lt;/p&gt;
+</feed>m.Windows.Documents;
+
+namespace MyApp.Controls
+{
+    public sealed class BindableRichTextBox : RichTextBox
+    {
+        public static readonly DependencyProperty SourceProperty =
+            DependencyProperty.Register(&amp;quot;Source&amp;quot;,
+                typeof(Uri), typeof(BindableRichTextBox),
+                new PropertyMetadata(OnSourceChanged));
+
+        public Uri Source
+        {
+            get =&amp;gt; GetValue(SourceProperty) as Uri;
+            set =&amp;gt; SetValue(SourceProperty, value);
+        }
+
+        private static void OnSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is BindableRichTextBox rtf &amp;amp;&amp;amp; rtf.Source != null)
+            {
+                var stream = Application.GetResourceStream(rtf.Source);
+                if (stream != null)
+                {
+                    var range = new TextRange(rtf.Document.ContentStart, rtf.Document.ContentEnd);
+                    range.Load(stream.Stream, DataFormats.Rtf);
+                }
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can now use a binding as you normally would in your XAML (or simply set it directly).&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;Window x:Class=&amp;quot;MyApp.MyView&amp;quot;
+        xmlns=&amp;quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&amp;quot;
+        xmlns:x=&amp;quot;http://schemas.microsoft.com/winfx/2006/xaml&amp;quot;
+        xmlns:d=&amp;quot;http://schemas.microsoft.com/expression/blend/2008&amp;quot;
+        xmlns:mc=&amp;quot;http://schemas.openxmlformats.org/markup-compatibility/2006&amp;quot;
+        xmlns:ui=&amp;quot;clr-namespace:MyApp.Controls&amp;quot;
+        mc:Ignorable=&amp;quot;d&amp;quot;&amp;gt;
+    &amp;lt;StackPanel&amp;gt;
+        &amp;lt;ui:BindableRichTextBox Source=&amp;quot;{Binding Licenses}&amp;quot; /&amp;gt;
+        &amp;lt;ui:BindableRichTextBox Source=&amp;quot;pack://application:,,,/MyApp;component/MyApp/Resources/Document.rtf&amp;quot; /&amp;gt;
+    &amp;lt;/StackPanel&amp;gt;
+&amp;lt;/Window&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+		<summary>&lt;p&gt;I've been doing some WPF development the last couple of weeks, and one thing that bugged me was that there is no way (as far as I know) to bind content to a &lt;code&gt;RichTextBox&lt;/code&gt;. This makes it kind of difficult to follow the MVVM pattern since the view model needs intimate knowledge of the view.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2017/12/conditionals-in-xaml" />
+		<id>http://patriksvensson.se/2017/12/conditionals-in-xaml</id>
+		<title>Conditionals in XAML</title>
+		<updated>2017-12-03T00:00:00Z</updated>
+		<content>&lt;p&gt;Ever wanted to display things conditionally in XAML based on a pre-processor directive like &lt;code&gt;DEBUG&lt;/code&gt;?&lt;/p&gt;
+&lt;p&gt;Start by adding the following to your &lt;code&gt;AssemblyInfo.cs&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#if DEBUG
+[assembly: XmlnsDefinition(&amp;quot;http://github.com/me/myproject/debug&amp;quot;, &amp;quot;MyProjectNamespace&amp;quot;)]
+#endif
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, in your XAML file, you should be able to add a new namespace pointing to this definition. We also need to import the &lt;a href="https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/markup-compatibility-mc-language-features"&gt;XAML compatibility&lt;/a&gt; namespace. To suppress the errors given by the XAML processor, use the &lt;code&gt;mc:Ignorable&lt;/code&gt; attribute.&lt;/p&gt;
 &lt;p&gt;You should now be able to use &lt;code&gt;AlternateContent&lt;/code&gt;, &lt;code&gt;Choice&lt;/code&gt; and (optionally) &lt;code&gt;Fallback&lt;/code&gt; elements in your XAML code to show
 different elements depending on your build configuration.&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-xaml"&gt;&amp;lt;Window x:Class=&amp;quot;MyProjectNamespace.MyView&amp;quot;
