@@ -9,7 +9,7 @@ In my new project [Jarvis](https://github.com/spectresystems/jarvis) I wanted to
 generate preview versions of the MSI packages, but one problem with that is that MSI
 requires the product version to be in the format `Major.Minor.Patch` which isn't compatible with [semantic verisoning](https://semver.org). We CAN use the `Major.Minor.Patch.Revision` format as a product version, but that won't work with [major upgrades](https://support.firegiant.com/hc/en-us/articles/230912187-Implement-major-upgrade-). An example of this would be `1.2.3-alpha45` which would require a different version number than `1.2.3-alpha46`.
 
-A solution to this is to use the following formula, where `PRE` is the pre-release number (normally the number of commits for the current patch).
+A solution to this is to use the following formula (found [here](https://github.com/semver/semver/issues/332)), where `PRE` is the pre-release number (normally the number of commits for the current patch).
 
 ```
 ENSURE (PATCH >= 0 && PATCH < 54)
