@@ -5,8 +5,8 @@
 		<link>http://patriksvensson.se/</link>
 		<description>Patrik Svensson</description>
 		<copyright>2018</copyright>
-		<pubDate>Wed, 31 Jan 2018 16:04:28 GMT</pubDate>
-		<lastBuildDate>Wed, 31 Jan 2018 16:04:28 GMT</lastBuildDate>
+		<pubDate>Wed, 31 Jan 2018 16:13:17 GMT</pubDate>
+		<lastBuildDate>Wed, 31 Jan 2018 16:13:17 GMT</lastBuildDate>
 		<item>
 			<title>Calculating product versions for MSI packages compatible with semantic versioning</title>
 			<link>http://patriksvensson.se/2018/01/calculating-msi-product-version</link>
@@ -113,7 +113,8 @@
 			<pubDate>Thu, 15 Aug 2013 00:00:00 GMT</pubDate>
 		</item>
 	</channel>
-</rss>t;pre&gt;&lt;code class="language-csharp"&gt;using System;
+</rss>r from an expert on WPF, so if you have any suggestions then please let me know!&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;

@@ -4,7 +4,7 @@
 	<id>http://patriksvensson.se/</id>
 	<title>Patrik Svensson</title>
 	<rights>2018</rights>
-	<updated>2018-01-31T16:04:28Z</updated>
+	<updated>2018-01-31T16:13:17Z</updated>
 	<subtitle>Patrik Svensson</subtitle>
 	<entry>
 		<link href="http://patriksvensson.se/2018/01/calculating-msi-product-version" />
@@ -111,7 +111,10 @@
 		<updated>2013-08-15T00:00:00Z</updated>
 		<summary>Patrik Svensson</summary>
 	</entry>
-</feed>m.Windows.Documents;
+</feed>e-csharp"&gt;using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace MyApp.Controls
 {
