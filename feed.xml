@@ -4,8 +4,15 @@
 	<id>http://patriksvensson.se/</id>
 	<title>Patrik Svensson</title>
 	<rights>2018</rights>
-	<updated>2018-01-31T16:13:17Z</updated>
+	<updated>2018-02-01T12:20:01Z</updated>
 	<subtitle>Patrik Svensson</subtitle>
+	<entry>
+		<link href="http://patriksvensson.se/2018/02/debugging-rust-on-windows-using-vscode" />
+		<id>http://patriksvensson.se/2018/02/debugging-rust-on-windows-using-vscode</id>
+		<title>Debugging Rust on Windows using Visual Studio Code</title>
+		<updated>2018-02-01T00:00:00Z</updated>
+		<summary>Patrik Svensson</summary>
+	</entry>
 	<entry>
 		<link href="http://patriksvensson.se/2018/01/calculating-msi-product-version" />
 		<id>http://patriksvensson.se/2018/01/calculating-msi-product-version</id>
@@ -111,7 +118,109 @@
 		<updated>2013-08-15T00:00:00Z</updated>
 		<summary>Patrik Svensson</summary>
 	</entry>
-</feed>e-csharp"&gt;using System;
+</feed>t: https://go.microsoft.com/fwlink/?linkid=830387
+    &amp;quot;version&amp;quot;: &amp;quot;0.2.0&amp;quot;,
+    &amp;quot;configurations&amp;quot;: [
+        {
+            &amp;quot;type&amp;quot;: &amp;quot;lldb&amp;quot;,
+            &amp;quot;request&amp;quot;: &amp;quot;launch&amp;quot;,
+            &amp;quot;name&amp;quot;: &amp;quot;Debug&amp;quot;,
+            &amp;quot;program&amp;quot;: &amp;quot;${workspaceRoot}/target/debug/hello_world&amp;quot;,
+            &amp;quot;args&amp;quot;: [],
+            &amp;quot;cwd&amp;quot;: &amp;quot;${workspaceRoot}/target/debug/&amp;quot;
+        }
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="profit"&gt;9. Profit&lt;/h3&gt;
+&lt;p&gt;Press F5 again. You should now be debugging your code.&lt;/p&gt;
+&lt;p&gt;&lt;img src="/images/rust-debugging.png" class="img-fluid" alt="Debugging Rust" /&gt;&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;I recently wanted to debug a Rust program on Windows that I had written, and was struggling with how to get it to work. Since there was quite a lot of hoops to jump through to get it to work, I though I should share it with other people as well. I've written this blog post from memory and I'm far from an expert in LLVM or Rust, so if you see something strange here then let me know.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2018/01/calculating-msi-product-version" />
+		<id>http://patriksvensson.se/2018/01/calculating-msi-product-version</id>
+		<title>Calculating product versions for MSI packages compatible with semantic versioning</title>
+		<updated>2018-01-30T00:00:00Z</updated>
+		<content>&lt;p&gt;In my new project &lt;a href="https://github.com/spectresystems/jarvis"&gt;Jarvis&lt;/a&gt; I wanted to start
+generate preview versions of the MSI packages, but one problem with that is that MSI
+requires the product version to be in the format &lt;code&gt;Major.Minor.Patch&lt;/code&gt; which isn't compatible with &lt;a href="https://semver.org"&gt;semantic verisoning&lt;/a&gt;. We CAN use the &lt;code&gt;Major.Minor.Patch.Revision&lt;/code&gt; format as a product version, but that won't work with &lt;a href="https://support.firegiant.com/hc/en-us/articles/230912187-Implement-major-upgrade-"&gt;major upgrades&lt;/a&gt;. An example of this would be &lt;code&gt;1.2.3-alpha45&lt;/code&gt; which would require a different version number than &lt;code&gt;1.2.3-alpha46&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;A solution to this is to use the following formula (originally found &lt;a href="https://github.com/semver/semver/issues/332"&gt;here&lt;/a&gt;), where &lt;code&gt;PRE&lt;/code&gt; is the pre-release number (normally the number of commits for the current patch).&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ENSURE (PATCH &amp;gt;= 0 &amp;amp;&amp;amp; PATCH &amp;lt; 54)
+ENSURE (PRE &amp;gt;= 0 &amp;amp;&amp;amp; PRE &amp;lt; 1000)
+
+PATCH = 10000 + (PATCH * 1000) + PRE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Which would result in the following versions.&lt;/p&gt;
+&lt;table class="table"&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Semantic version&lt;/th&gt;
+&lt;th&gt;Patch&lt;/th&gt;
+&lt;th&gt;Pre-release&lt;/th&gt;
+&lt;th&gt;MSI version&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1.2.0-alpha1&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1.2.10001&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1.2.0-alpha2&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;1.2.10002&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1.2.0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;1.2.10003&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1.2.3-alpha1&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1.2.40001&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1.2.3&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;1.2.40002&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1.2.53-alpha32&lt;/td&gt;
+&lt;td&gt;53&lt;/td&gt;
+&lt;td&gt;32&lt;/td&gt;
+&lt;td&gt;1.2.63032&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1.2.53&lt;/td&gt;
+&lt;td&gt;53&lt;/td&gt;
+&lt;td&gt;33&lt;/td&gt;
+&lt;td&gt;1.2.63033&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;This is not by any means fool-proof but might act like a good starting point.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;In my new project &lt;a href="https://github.com/spectresystems/jarvis"&gt;Jarvis&lt;/a&gt; I wanted to start
+generate preview versions of the MSI packages, but one problem with that is that MSI
+requires the product version to be in the format &lt;code&gt;Major.Minor.Patch&lt;/code&gt; which isn't compatible with &lt;a href="https://semver.org"&gt;semantic verisoning&lt;/a&gt;. We CAN use the &lt;code&gt;Major.Minor.Patch.Revision&lt;/code&gt; format as a product version, but that won't work with &lt;a href="https://support.firegiant.com/hc/en-us/articles/230912187-Implement-major-upgrade-"&gt;major upgrades&lt;/a&gt;. An example of this would be &lt;code&gt;1.2.3-alpha45&lt;/code&gt; which would require a different version number than &lt;code&gt;1.2.3-alpha46&lt;/code&gt;.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://patriksvensson.se/2017/12/binding-to-a-richtextbox-in-wpf" />
+		<id>http://patriksvensson.se/2017/12/binding-to-a-richtextbox-in-wpf</id>
+		<title>Binding to a RichTextBox in WPF</title>
+		<updated>2017-12-11T00:00:00Z</updated>
+		<content>&lt;p&gt;I've been doing some WPF development the last couple of weeks, and one thing that bugged me was that there is no way (as far as I know) to bind content to a &lt;code&gt;RichTextBox&lt;/code&gt;. This makes it kind of difficult to follow the MVVM pattern since the view model needs intimate knowledge of the view.&lt;/p&gt;
+&lt;p&gt;In my case, I wanted to bind the textbox against a resource using a &lt;code&gt;pack://&lt;/code&gt; URI, so I threw together some code to do this. I am far from an expert on WPF, so if you have any suggestions then please let me know!&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
