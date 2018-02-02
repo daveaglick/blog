@@ -11,6 +11,9 @@ I recently wanted to debug a Rust program on Windows that I had written, and was
 
 The drawback of this approach is that you can't debug applications built using the MSVC toolchain. If you know how to do this, please tell me. I would really appreciate it.
 
+**UPDATE 2018-02-02:**  
+As [Stuart Dootson pointed out to me](https://twitter.com/studoot/status/959093798692380672), there's a guide on how to debug applications using the MSVC toolchain [here](http://www.brycevandyk.com/debug-rust-on-windows-with-visual-studio-code-and-the-msvc-debugger/). I haven't tried this out myself, but it looks promising. Thanks Stuart!
+
 ### 1. Install LLVM
 
 First we need to install LLVM which is a compiler infrastructure. Part of LLVM is LLDB which is the debugger we're going to use. The latest version of LLVM doesn't include Python support for LLDB which is required for the VSCode extension, so we need to download a custom built version and install that.
