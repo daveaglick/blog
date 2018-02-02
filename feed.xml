@@ -4,7 +4,7 @@
 	<id>http://patriksvensson.se/</id>
 	<title>Patrik Svensson</title>
 	<rights>2018</rights>
-	<updated>2018-02-01T12:20:01Z</updated>
+	<updated>2018-02-02T04:22:31Z</updated>
 	<subtitle>Patrik Svensson</subtitle>
 	<entry>
 		<link href="http://patriksvensson.se/2018/02/debugging-rust-on-windows-using-vscode" />
@@ -118,7 +118,11 @@
 		<updated>2013-08-15T00:00:00Z</updated>
 		<summary>Patrik Svensson</summary>
 	</entry>
-</feed>t: https://go.microsoft.com/fwlink/?linkid=830387
+</feed>will ask you what environment you want to use. Choose &lt;code&gt;LLDB Debugger&lt;/code&gt; here. This will open up the &lt;code&gt;launch.json&lt;/code&gt; file, and here we need to tell Visual Studio Code how to launch our project. Edit the file so it looks similar to this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     &amp;quot;version&amp;quot;: &amp;quot;0.2.0&amp;quot;,
     &amp;quot;configurations&amp;quot;: [
         {
