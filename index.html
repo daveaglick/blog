@@ -90,7 +90,7 @@
     <div class="site-heading">
         <h1>Patrik Svensson</h1>
                 <hr class="small">
-        <span class="subheading">This is my blog, where I write about stuff that interests me such as .NET, CI/CD and technology in general. I am a husband and a father, and I enjoy contributing to Open Source projects.</span>
+        <span class="subheading">This is my blog, where I write about stuff that interests me such as .NET, Rust, CI/CD and technology in general. I am a husband and a father, and I enjoy contributing to Open Source projects.</span>
 </div>
                                         </div>
                                 </div>
@@ -104,6 +104,17 @@
                                         
 <div class="row">
     <div class="col-sm-8 right-border">
+                <div class="post-preview">
+                    <a href="/2018/04/an-introduction-to-spectre-cli">
+                        <h2 class="post-title">An introduction to Spectre.Cli</h2>
+                    </a>
+                    <p class="post-meta">Posted on 10 april 2018</p>
+<p>I've been writing a lot of CLI apps, both at work and in my free time, and there's never really
+been a command line parsing framework that has fitted my needs. While being either too complex
+or too simple, it's always nagged me that I need to write so much code myself. What I wanted
+was a way to be declarative about my commands, options and arguments while still allowing
+composition of them.</p>                </div>       
+                    <hr /> 
                 <div class="post-preview">
                     <a href="/2018/02/debugging-rust-on-windows-using-vscode">
                         <h2 class="post-title">Debugging Rust on Windows using Visual Studio Code</h2>
@@ -119,13 +130,6 @@
 <p>In my new project <a href="https://github.com/spectresystems/jarvis">Jarvis</a> I wanted to start
 generate preview versions of the MSI packages, but one problem with that is that MSI
 requires the product version to be in the format <code>Major.Minor.Patch</code> which isn't compatible with <a href="https://semver.org">semantic verisoning</a>. We CAN use the <code>Major.Minor.Patch.Revision</code> format as a product version, but that won't work with <a href="https://support.firegiant.com/hc/en-us/articles/230912187-Implement-major-upgrade-">major upgrades</a>. An example of this would be <code>1.2.3-alpha45</code> which would require a different version number than <code>1.2.3-alpha46</code>.</p>                </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/2017/12/binding-to-a-richtextbox-in-wpf">
-                        <h2 class="post-title">Binding to a RichTextBox in WPF</h2>
-                    </a>
-                    <p class="post-meta">Posted on 11 december 2017</p>
-<p>I've been doing some WPF development the last couple of weeks, and one thing that bugged me was that there is no way (as far as I know) to bind content to a <code>RichTextBox</code>. This makes it kind of difficult to follow the MVVM pattern since the view model needs intimate knowledge of the view.</p>                </div>       
         <ul class="pager">
             <li class="previous">                
             </li>
@@ -139,15 +143,15 @@ requires the product version to be in the format <code>Major.Minor.Patch</code> 
             <h5>Tags</h5>
             <div>
                     <a role="button" href="/tags/net" class="btn btn-default btn-sm"> .NET (12)</a>
-                    <a role="button" href="/tags/c%23" class="btn btn-default btn-sm"> C# (9)</a>
+                    <a role="button" href="/tags/c%23" class="btn btn-default btn-sm"> C# (10)</a>
                     <a role="button" href="/tags/cake" class="btn btn-default btn-sm"> Cake (3)</a>
                     <a role="button" href="/tags/wpf" class="btn btn-default btn-sm"> WPF (2)</a>
-                    <a role="button" href="/tags/llvm" class="btn btn-default btn-sm"> LLVM (1)</a>
-                    <a role="button" href="/tags/lldb" class="btn btn-default btn-sm"> LLDB (1)</a>
-                    <a role="button" href="/tags/teamcity" class="btn btn-default btn-sm"> TeamCity (1)</a>
-                    <a role="button" href="/tags/msi" class="btn btn-default btn-sm"> MSI (1)</a>
-                    <a role="button" href="/tags/unit-testing" class="btn btn-default btn-sm"> Unit testing (1)</a>
                     <a role="button" href="/tags/wix" class="btn btn-default btn-sm"> WiX (1)</a>
+                    <a role="button" href="/tags/llvm" class="btn btn-default btn-sm"> LLVM (1)</a>
+                    <a role="button" href="/tags/c&#x2B;&#x2B;" class="btn btn-default btn-sm"> C&#x2B;&#x2B; (1)</a>
+                    <a role="button" href="/tags/lldb" class="btn btn-default btn-sm"> LLDB (1)</a>
+                    <a role="button" href="/tags/unit-testing" class="btn btn-default btn-sm"> Unit testing (1)</a>
+                    <a role="button" href="/tags/xunit" class="btn btn-default btn-sm"> xUnit (1)</a>
             </div>
             <ul class="pager">
                 <li class="next">
@@ -158,10 +162,10 @@ requires the product version to be in the format <code>Major.Minor.Patch</code> 
             <hr />
             <h5>Older Posts</h5>
             <ul class="list-unstyled">
+                    <li><a href="/2017/12/binding-to-a-richtextbox-in-wpf">Binding to a RichTextBox in WPF</a></li>
                     <li><a href="/2017/12/conditionals-in-xaml">Conditionals in XAML</a></li>
                     <li><a href="/2017/11/using-embedded-resources-in-xunit-tests">Using embedded resources in xUnit tests</a></li>
                     <li><a href="/2017/08/never-mutate-state-in-a-debug-assert-call">Never mutate state in a Debug.Assert call</a></li>
-                    <li><a href="/2016/12/azure-web-apps-and-the-certificate-store">Azure Web Apps and the certificate store</a></li>
             </ul>
                 <ul class="pager">
                     <li class="next">

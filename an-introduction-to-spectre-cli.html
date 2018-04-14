@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Patrik Svensson - Debugging</title>
+        <title>Patrik Svensson - An introduction to Spectre.Cli</title>
         <meta name="description" content="Patrik Svensson" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="Patrik Svensson" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Patrik Svensson - Debugging" />
+        <meta property="og:title" content="Patrik Svensson - An introduction to Spectre.Cli" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://patriksvensson.se/tags/debugging" />
+        <meta property="og:url" content="http://patriksvensson.se/2018/04/an-introduction-to-spectre-cli" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="/assets/js/jquery.min.js"></script>
@@ -86,9 +86,18 @@
                         <div class="container">
                                 <div class="row">
                                         <div class="col-md-12">
-<div class="site-heading">
-    <h1>Debugging</h1>
-</div>                                            </div>
+
+    
+<div class="post-heading">
+    <h1>An introduction to Spectre.Cli</h1>
+    <div class="meta">        
+Published on 10 april 2018<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/c%23" class="btn btn-default btn-xs">C#</a>
+                    <a role="button" href="/tags/cli" class="btn btn-default btn-xs">CLI</a>
+        </div>     
+</div>
+                                        </div>
                                 </div>
                         </div>
                 </header>
@@ -97,51 +106,125 @@
                 <div class="container">
                         <div class="row">
                                 <div id="content" class="col-md-12">
-                                        <div class="container-sm-height">
-    <div class="row row-sm-height">
-        <div class="col-sm-8 right-border col-sm-height">
-                    <div class="post-list">
-            <a href="/2018/02/debugging-rust-on-windows-using-vscode">
-                <h3 class="post-title">Debugging Rust on Windows using Visual Studio Code</h3>
-            </a>
-            <p class="post-meta">Posted on 01 februari 2018</p>      
-        </div>   
+                                        
+
+<p>I've been writing a lot of CLI apps, both at work and in my free time, and there's never really
+been a command line parsing framework that has fitted my needs. While being either too complex
+or too simple, it's always nagged me that I need to write so much code myself. What I wanted
+was a way to be declarative about my commands, options and arguments while still allowing
+composition of them.</p>
+<p>So a year back or something like that I decided to build a small framework upon
+<code>Microsoft.Extensions.CommandLineUtils</code> that would allow me to write my applications like I wanted to,
+and it worked great (although with a lot of duct tape).</p>
+<p>That was until I ran into bugs and other annoyances in the underlying library and discovered
+that they didn't accept any pull request since the library was stable for their needs
+and not under active development. So I decided to rip out Microsoft's library and replace
+it with something else, and <a href="https://github.com/spectresystems/spectre.cli">Spectre.Cli</a> was born.</p>
+<h2 id="how-does-it-work">How does it work?</h2>
+<p>The underlying philosophy behing Spectre.Cli is to rely on the .NET type system to
+declare the commands, but tie everything together via composition.</p>
+<p>Imagine the following command structure:</p>
+<ul>
+<li>dotnet <em>(executable)</em>
+<ul>
+<li>add <code>[PROJECT]</code>
+<ul>
+<li>package <code>&lt;PACKAGE_NAME&gt;</code></li>
+<li>reference <code>&lt;PROJECT_REFERENCE&gt;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>For this I would like to implement the commands (the different levels in the tree that
+executes something) separately from the settings (the options, flags and arguments),
+which I want to be able to inherit from each other.</p>
+<pre><code class="language-csharp">public class AddSettings : CommandSettings
+{
+    [CommandArgument(0, &quot;[PROJECT]&quot;)]
+    public string Project { get; set; }
+}
+
+public class AddPackageSettings : AddSettings
+{
+    [CommandArgument(0, &quot;&lt;PACKAGE_NAME&gt;&quot;)]
+    public string PackageName { get; set; }
+
+    [CommandOption(&quot;-v|--version &lt;VERSION&gt;&quot;)]
+    public string Version { get; set; }
+}
+
+public class AddReferenceSettings : AddSettings
+{
+    [CommandArgument(0, &quot;&lt;PROJECT_REFERENCE&gt;&quot;)]
+    public string ProjectReference { get; set; }
+}
+</code></pre>
+<pre><code class="language-csharp">public class AddPackageCommand : Command&lt;AddPackageSettings&gt;
+{
+    public override int Execute(AddPackageSettings settings, ILookup&lt;string, string&gt; remaining)
+    {
+        // Omitted
+    }
+}
+
+public class AddReferenceCommand : Command&lt;AddReferenceSettings&gt;
+{
+    public override int Execute(AddReferenceSettings settings, ILookup&lt;string, string&gt; remaining)
+    {
+        // Omitted
+    }
+}
+</code></pre>
+<p>Now when we have our commands and settings implemented, we can compose a command tree
+that tells the parser how to interpret user input.</p>
+<pre><code class="language-csharp">using Spectre.Cli;
+
+namespace MyApp
+{
+    public static class Program
+    {
+        public static int Main(string[] args)
+        {
+            var app = new CommandApp();
+
+            app.Configure(config =&gt;
+            {
+                config.AddCommand&lt;AddSettings&gt;(&quot;add&quot;, add =&gt;
+                {
+                    add.AddCommand&lt;AddPackageCommand&gt;(&quot;package&quot;);
+                    add.AddCommand&lt;AddReferenceCommand&gt;(&quot;reference&quot;);
+                });
+            });
+
+            return app.Run(args);
+        }
+    }
+}
+</code></pre>
+<p>Now you might wonder, why do things like this? Well, for starters the different parts
+of the application are separated, while still having the option to share things like options,
+flags and arguments between them.</p>
+<p>This make the resulting code very clean and easy to navigate, not to mention to unit test.
+And most importantly at all, the type system guides me to do the right thing. I can't configure
+commands in non-compatible ways, and if I want to add a new top-level <code>add-package</code> command
+(or move the command completely), it's just a single line to change. This makes it easy to
+experiment and makes the CLI experience a first class citizen of your application.</p>
+<h2 id="errors">Errors</h2>
+<p>I've also put some time in making the help screens and errors more intuitive than most other
+command line parsing frameworks.</p>
+<p><img src="/images/command_help.png" class="img-fluid" alt="Help" /><br />
+<img src="/images/command_error.png" class="img-fluid" alt="Error" /></p>
+<h2 id="what-else">What else?</h2>
+<p>This article was meant as an introduction to Spectre.Cli, but the framework itself contains a
+lot of other things as well such as dependency injection, validation and async/await support.
+More about that in a later blog post!</p>
+<p>If you want to see Spectre.Cli in action I recommend you to take a look at the
+<a href="https://github.com/spectresystems/spectre.cli/tree/develop/samples">sample applications</a> in the
+source code repository.</p>
 
 
-            <nav>
-                <ul class="pager">
-                    <li class="previous">                
-                    </li>
-                    <li class="next">
-                    </li>
-                </ul>
-            </nav>
-            <hr class="visible-xs-block" />
-        </div>
-		
-        <div class="col-sm-4 col-sm-height">
-                <a role="button" href="/tags/net" class="btn btn-default btn-xs">.NET (12)</a>
-                <a role="button" href="/tags/c%23" class="btn btn-default btn-xs">C# (10)</a>
-                <a role="button" href="/tags/cake" class="btn btn-default btn-xs">Cake (3)</a>
-                <a role="button" href="/tags/wpf" class="btn btn-default btn-xs">WPF (2)</a>
-                <a role="button" href="/tags/cli" class="btn btn-default btn-xs">CLI (1)</a>
-                <a role="button" href="/tags/rust" class="btn btn-default btn-xs">Rust (1)</a>
-                <a role="button" href="/tags/debugging" class="btn btn-primary btn-xs">Debugging (1)</a>
-                <a role="button" href="/tags/llvm" class="btn btn-default btn-xs">LLVM (1)</a>
-                <a role="button" href="/tags/lldb" class="btn btn-default btn-xs">LLDB (1)</a>
-                <a role="button" href="/tags/msi" class="btn btn-default btn-xs">MSI (1)</a>
-                <a role="button" href="/tags/wix" class="btn btn-default btn-xs">WiX (1)</a>
-                <a role="button" href="/tags/xunit" class="btn btn-default btn-xs">xUnit (1)</a>
-                <a role="button" href="/tags/azure" class="btn btn-default btn-xs">Azure (1)</a>
-                <a role="button" href="/tags/appveyor" class="btn btn-default btn-xs">AppVeyor (1)</a>
-                <a role="button" href="/tags/logging" class="btn btn-default btn-xs">Logging (1)</a>
-                <a role="button" href="/tags/teamcity" class="btn btn-default btn-xs">TeamCity (1)</a>
-                <a role="button" href="/tags/github" class="btn btn-default btn-xs">GitHub (1)</a>
-                <a role="button" href="/tags/c&#x2B;&#x2B;" class="btn btn-default btn-xs">C&#x2B;&#x2B; (1)</a>
-                <a role="button" href="/tags/unit-testing" class="btn btn-default btn-xs">Unit testing (1)</a>
-        </div>
-    </div>
-</div>
+
                                 </div>
                         </div>
                 </div>

@@ -5,8 +5,15 @@
 		<link>http://patriksvensson.se/</link>
 		<description>Patrik Svensson</description>
 		<copyright>2018</copyright>
-		<pubDate>Fri, 02 Feb 2018 04:22:31 GMT</pubDate>
-		<lastBuildDate>Fri, 02 Feb 2018 04:22:31 GMT</lastBuildDate>
+		<pubDate>Sat, 14 Apr 2018 07:59:01 GMT</pubDate>
+		<lastBuildDate>Sat, 14 Apr 2018 07:59:01 GMT</lastBuildDate>
+		<item>
+			<title>An introduction to Spectre.Cli</title>
+			<link>http://patriksvensson.se/2018/04/an-introduction-to-spectre-cli</link>
+			<description>Patrik Svensson</description>
+			<guid>http://patriksvensson.se/2018/04/an-introduction-to-spectre-cli</guid>
+			<pubDate>Tue, 10 Apr 2018 00:00:00 GMT</pubDate>
+		</item>
 		<item>
 			<title>Debugging Rust on Windows using Visual Studio Code</title>
 			<link>http://patriksvensson.se/2018/02/debugging-rust-on-windows-using-vscode</link>
@@ -120,7 +127,79 @@
 			<pubDate>Thu, 15 Aug 2013 00:00:00 GMT</pubDate>
 		</item>
 	</channel>
-</rss>&lt;h3 id="edit-launch.json"&gt;8. Edit launch.json&lt;/h3&gt;
+</rss>most other
+command line parsing frameworks.&lt;/p&gt;
+&lt;p&gt;&lt;img src="/images/command_help.png" class="img-fluid" alt="Help" /&gt;&lt;br /&gt;
+&lt;img src="/images/command_error.png" class="img-fluid" alt="Error" /&gt;&lt;/p&gt;
+&lt;h2 id="what-else"&gt;What else?&lt;/h2&gt;
+&lt;p&gt;This article was meant as an introduction to Spectre.Cli, but the framework itself contains a
+lot of other things as well such as dependency injection, validation and async/await support.
+More about that in a later blog post!&lt;/p&gt;
+&lt;p&gt;If you want to see Spectre.Cli in action I recommend you to take a look at the
+&lt;a href="https://github.com/spectresystems/spectre.cli/tree/develop/samples"&gt;sample applications&lt;/a&gt; in the
+source code repository.&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>Debugging Rust on Windows using Visual Studio Code</title>
+			<link>http://patriksvensson.se/2018/02/debugging-rust-on-windows-using-vscode</link>
+			<description>&lt;p&gt;I recently wanted to debug a Rust program on Windows that I had written, and was struggling with how to get it to work. Since there was quite a lot of hoops to jump through to get it to work, I though I should share it with other people as well. I've written this blog post from memory and I'm far from an expert in LLVM or Rust, so if you see something strange here then let me know.&lt;/p&gt;</description>
+			<guid>http://patriksvensson.se/2018/02/debugging-rust-on-windows-using-vscode</guid>
+			<pubDate>Thu, 01 Feb 2018 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;I recently wanted to debug a Rust program on Windows that I had written, and was struggling with how to get it to work. Since there was quite a lot of hoops to jump through to get it to work, I though I should share it with other people as well. I've written this blog post from memory and I'm far from an expert in LLVM or Rust, so if you see something strange here then let me know.&lt;/p&gt;
+&lt;p&gt;The drawback of this approach is that you can't debug applications built using the MSVC toolchain. If you know how to do this, please tell me. I would really appreciate it.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;UPDATE 2018-02-02:&lt;/strong&gt;&lt;br /&gt;
+As &lt;a href="https://twitter.com/studoot/status/959093798692380672"&gt;Stuart Dootson pointed out to me&lt;/a&gt;, there's a guide on how to debug applications using the MSVC toolchain &lt;a href="http://www.brycevandyk.com/debug-rust-on-windows-with-visual-studio-code-and-the-msvc-debugger/"&gt;here&lt;/a&gt;. I haven't tried this out myself, but it looks promising. Thanks Stuart!&lt;/p&gt;
+&lt;h3 id="install-llvm"&gt;1. Install LLVM&lt;/h3&gt;
+&lt;p&gt;First we need to install LLVM which is a compiler infrastructure. Part of LLVM is LLDB which is the debugger we're going to use. The latest version of LLVM doesn't include Python support for LLDB which is required for the VSCode extension, so we need to download a custom built version and install that.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/vadimcn/llvm/releases"&gt;https://github.com/vadimcn/llvm/releases&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="install-python"&gt;2. Install Python&lt;/h3&gt;
+&lt;p&gt;We now need to install Python v3.5 (Not v3.6).&lt;br /&gt;
+&lt;a href="https://www.python.org/downloads/release/python-354/"&gt;https://www.python.org/downloads/release/python-354/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;If you installed the x64 version of LLVM, make sure that you install the x64 version of Python as well, otherwise you will encounter problems later on.&lt;/p&gt;
+&lt;h3 id="make-sure-it-works"&gt;3. Make sure it works&lt;/h3&gt;
+&lt;p&gt;Make sure that lldb can use scripting. If this doesn't work, make sure that both LLVM and Python is on PATH.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;C:&amp;gt; lldb
+(lldb) script
+Python Interactive Interpreter. To exit, type 'quit()', 'exit()' or Ctrl-D.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Write &lt;code&gt;exit()&lt;/code&gt; to close the Python interpreter and then &lt;code&gt;CTRL+C&lt;/code&gt; to break out of LLDB.&lt;/p&gt;
+&lt;h3 id="install-the-vscode-extension"&gt;4. Install the VSCode extension&lt;/h3&gt;
+&lt;p&gt;We now need to install the &lt;code&gt;vscode-lldb&lt;/code&gt; extension for Visual Studio Code. This is what makes it possible to debug our Rust code from Visual Studio Code.&lt;br /&gt;
+&lt;a href="https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb"&gt;https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="install-the-rust-gnu-toolchain"&gt;5. Install the Rust GNU toolchain&lt;/h3&gt;
+&lt;p&gt;Since LLDB doesn't work with the msvc compiler, we need to install the Rust GNU toolschain and use that one. This have some drawbacks though such as we won't be able to intop with software produced by Visual Studio.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;C:&amp;gt; rustup install stable-gnu
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="set-the-active-toolchain"&gt;6. Set the active toolchain&lt;/h3&gt;
+&lt;p&gt;We now need to set the Rust GNU toolchain as the active toolchain. We do this by using the &lt;code&gt;rustup&lt;/code&gt; command again.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;C:&amp;gt; rustup default stable-gnu
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We should now verify what our toolchain configuration look like by using &lt;code&gt;rustup show&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;C:&amp;gt; rustup show
+Default host: x86_64-pc-windows-msvc
+
+installed toolchains
+--------------------
+
+stable-x86_64-pc-windows-gnu (default)
+stable-x86_64-pc-windows-msvc
+beta-x86_64-pc-windows-msvc
+nightly-2017-12-08-x86_64-pc-windows-msvc
+nightly-x86_64-pc-windows-msvc
+
+active toolchain
+----------------
+
+stable-x86_64-pc-windows-gnu (default)
+rustc 1.23.0 (766bd11c8 2018-01-01)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="create-a-project"&gt;7. Create a project&lt;/h3&gt;
+&lt;p&gt;Create a new project called &lt;code&gt;hello_world&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;C:\Source&amp;gt; cargo new --bin hello_world
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Open Visual Studio Code and go to &lt;code&gt;./src/main.rs&lt;/code&gt; and place a breakpoint.&lt;/p&gt;
+&lt;h3 id="edit-launch.json"&gt;8. Edit launch.json&lt;/h3&gt;
 &lt;p&gt;Press F5 to run the project. A selection box will appear that will ask you what environment you want to use. Choose &lt;code&gt;LLDB Debugger&lt;/code&gt; here. This will open up the &lt;code&gt;launch.json&lt;/code&gt; file, and here we need to tell Visual Studio Code how to launch our project. Edit the file so it looks similar to this:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;{
     // Use IntelliSense to learn about possible attributes.
