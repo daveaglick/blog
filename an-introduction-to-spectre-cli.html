@@ -190,7 +190,7 @@ namespace MyApp
 
             app.Configure(config =&gt;
             {
-                config.AddCommand&lt;AddSettings&gt;(&quot;add&quot;, add =&gt;
+                config.AddBranch&lt;AddSettings&gt;(&quot;add&quot;, add =&gt;
                 {
                     add.AddCommand&lt;AddPackageCommand&gt;(&quot;package&quot;);
                     add.AddCommand&lt;AddReferenceCommand&gt;(&quot;reference&quot;);
