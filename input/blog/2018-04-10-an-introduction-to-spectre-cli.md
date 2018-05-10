@@ -93,7 +93,7 @@ namespace MyApp
 
             app.Configure(config =>
             {
-                config.AddCommand<AddSettings>("add", add =>
+                config.AddBranch<AddSettings>("add", add =>
                 {
                     add.AddCommand<AddPackageCommand>("package");
                     add.AddCommand<AddReferenceCommand>("reference");
