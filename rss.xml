@@ -5,14 +5,14 @@
 		<link>http://patriksvensson.se/</link>
 		<description>Patrik Svensson</description>
 		<copyright>2018</copyright>
-		<pubDate>Tue, 02 Oct 2018 10:28:32 GMT</pubDate>
-		<lastBuildDate>Tue, 02 Oct 2018 10:28:32 GMT</lastBuildDate>
+		<pubDate>Tue, 02 Oct 2018 10:38:06 GMT</pubDate>
+		<lastBuildDate>Tue, 02 Oct 2018 10:38:06 GMT</lastBuildDate>
 		<item>
 			<title>Generating API clients using AutoRest</title>
-			<link>http://patriksvensson.se/2018/09/generating-api-clients-using-autorest</link>
+			<link>http://patriksvensson.se/2018/10/generating-api-clients-using-autorest</link>
 			<description>Patrik Svensson</description>
-			<guid>http://patriksvensson.se/2018/09/generating-api-clients-using-autorest</guid>
-			<pubDate>Tue, 18 Sep 2018 00:00:00 GMT</pubDate>
+			<guid>http://patriksvensson.se/2018/10/generating-api-clients-using-autorest</guid>
+			<pubDate>Tue, 02 Oct 2018 00:00:00 GMT</pubDate>
 		</item>
 		<item>
 			<title>An introduction to Spectre.Cli</title>
