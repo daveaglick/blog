@@ -4,8 +4,15 @@
 	<id>http://patriksvensson.se/</id>
 	<title>Patrik Svensson</title>
 	<rights>2018</rights>
-	<updated>2018-05-10T13:20:24Z</updated>
+	<updated>2018-10-02T10:28:32Z</updated>
 	<subtitle>Patrik Svensson</subtitle>
+	<entry>
+		<link href="http://patriksvensson.se/2018/09/generating-api-clients-using-autorest" />
+		<id>http://patriksvensson.se/2018/09/generating-api-clients-using-autorest</id>
+		<title>Generating API clients using AutoRest</title>
+		<updated>2018-09-18T00:00:00Z</updated>
+		<summary>Patrik Svensson</summary>
+	</entry>
 	<entry>
 		<link href="http://patriksvensson.se/2018/04/an-introduction-to-spectre-cli" />
 		<id>http://patriksvensson.se/2018/04/an-introduction-to-spectre-cli</id>

@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Patrik Svensson - It&#x27;s not a party without Cake</title>
+        <title>Patrik Svensson - Generating API clients using AutoRest</title>
         <meta name="description" content="Patrik Svensson" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="Patrik Svensson" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Patrik Svensson - It&#x27;s not a party without Cake" />
+        <meta property="og:title" content="Patrik Svensson - Generating API clients using AutoRest" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://patriksvensson.se/2014/07/its-not-a-party-without-cake" />
+        <meta property="og:url" content="http://patriksvensson.se/2018/09/generating-api-clients-using-autorest" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="/assets/js/jquery.min.js"></script>
@@ -89,13 +89,14 @@
 
     
 <div class="post-heading">
-    <h1>It&#x27;s not a party without Cake</h1>
+    <h1>Generating API clients using AutoRest</h1>
     <div class="meta">        
-Published on 18 July 2014<br>    </div>
+Published on 18 September 2018<br>    </div>
         <div class="tags">
-                    <a role="button" href="/tags/net" class="btn btn-default btn-xs">.NET</a>
+                    <a role="button" href="/tags/autorest" class="btn btn-default btn-xs">AutoRest</a>
                     <a role="button" href="/tags/c%23" class="btn btn-default btn-xs">C#</a>
-                    <a role="button" href="/tags/cake" class="btn btn-default btn-xs">Cake</a>
+                    <a role="button" href="/tags/openapi" class="btn btn-default btn-xs">OpenAPI</a>
+                    <a role="button" href="/tags/swagger" class="btn btn-default btn-xs">Swagger</a>
         </div>     
 </div>
                                         </div>
@@ -109,95 +110,178 @@ Published on 18 July 2014<br>    </div>
                                 <div id="content" class="col-md-12">
                                         
 
-<p>I have during my nine years as a (professional) programmer used several different build automation systems such as <a href="https://github.com/ruby/rake">Rake</a>, <a href="https://github.com/psake/psake">psake</a>, <a href="http://www.cmake.org/">CMake</a>, <a href="http://msdn.microsoft.com/en-us/library/ms181709.aspx">TFS Build</a> and <a href="http://fsharp.github.io/FAKE/">FAKE</a>, but none of these have allowed me to write my build scripts using C# - the language I use the most.</p>
-<p>About two months ago I decided to change that and now it's time to formally introduce Cake, which is short for C# Make.</p>
+<p>This blog post looks at automatically generating an HTTP API client
+from a <a href="https://swagger.io/specification/">OpenAPI specification</a>
+(formerly swagger) using <a href="http://azure.github.io/autorest/">AutoRest</a>.</p>
+<p>We will also use another tool called <a href="https://github.com/domaindrivendev/Swashbuckle.AspNetCore">Swashbuckle</a>
+which is an ASP.NET Core library that allows us to annotate our
+controllers with metadata that is used to generate OpenAPI specifications.</p>
 <!--excerpt-->
-<p><img src="/images/cake-medium.png" class="img-fluid" alt="Build Status" /></p>
-<h2 id="what-is-cake">What is Cake?</h2>
-<p>Cake is (like you probably already figured out) a build automation system with a C# DSL to do things like compiling code, copy files/folders, running unit tests, compress files and build NuGet packages.</p>
-<p>Cake uses a <a href="http://martinfowler.com/articles/rake.html#DependencyBasedProgramming">dependency based programming model</a> just like Rake, FAKE and similar build automation systems where you declare <em>tasks</em> and the dependencies between those. When you execute a task, Cake will construct a directed acyclic graph containing all tasks and execute these in the correct order.</p>
-<pre><code>Task(&quot;A&quot;)
-    .Does(() =&gt;
-{
-});
-
-Task(&quot;B&quot;)
-    .IsDependentOn(&quot;A&quot;);
-    .Does(() =&gt;
-{
-});
-
-RunTarget(&quot;B&quot;);
+<h2 id="installing-autorest">Installing AutoRest</h2>
+<p>The first thing we need to do is to install <code>AutoRest</code> globally on
+our machine. If you have NPM installed on your computer, then this
+can  be done by running the following command:</p>
+<pre><code>&gt; npm install -g autorest
 </code></pre>
-<p>The goal of Cake is to be a first class alternative to those who - like me - want to write their build scripts in C# instead of Ruby, F# or Powershell.</p>
-<h2 id="what-does-a-cake-script-look-like">What does a Cake script look like?</h2>
-<p>Assume our build script have four steps where we want to:</p>
+<h2 id="setting-up-the-code-base">Setting up the code base</h2>
+<p>For this project we're going to create a standard ASP.NET Core
+web project, a class library that will hold our API client and
+a PowerShell script to generate the client for us.</p>
+<p>Why PowerShell and not Cake you might wonder if you know about
+my involvement in the Cake project, and the reason is simple;
+I want this guide to be as build agnostic as it can be, but
+don't worry, I will follow up with a detailed guide of how to
+convert the PowerShell script to a fully fledged Cake build script.</p>
+<p>Start with creating the project.</p>
+<pre><code>&gt; mkdir autorest-example
+&gt; cd autorest-example
+</code></pre>
+<p>Now we want to create a source directory where the source code
+for our API project will live.</p>
+<pre><code>&gt; mkdir src
+&gt; cd src
+</code></pre>
+<p>We continue by creating a solution file, and the two projects I
+mention above using the dotnet CLI.</p>
+<pre><code>&gt; dotnet new sln --name AutoRestExample
+&gt; dotnet new webapi --name Sample.Api
+&gt; dotnet new classlib --name Sample.Client
+&gt; dotnet sln AutoRestExample.sln add ./Sample.Api/Sample.Api.csproj
+&gt; dotnet sln AutoRestExample.sln add ./Sample.Client/Sample.Client.csproj
+</code></pre>
+<p>After this is done you can open the solution file in your editor of choice.
+For this tutorial/guide I will be using Visual Studio, but nothing
+stops you from using Visual Studio Code, Rider or a similar IDE/editor.</p>
+<h2 id="modifying-the-api-project">Modifying the API project</h2>
+<p>We're going to use a library called <code>Swashbuckle</code> to generate the OpenAPI
+specification directly from our ASP.NET Core controllers, so we will need to
+install the necessary NuGet packages.</p>
+<ul>
+<li><a href="http://nuget.org/packages/Swashbuckle.AspNetCore">Swashbuckle.AspNetCore</a></li>
+<li><a href="https://www.nuget.org/packages/Swashbuckle.AspNetCore.Annotations">Swashbuckle.AspNetCore.Annotations</a></li>
+</ul>
+<p>We will also need the <code>Swashbuckle.AspNetCore.Cli</code> tool installed as part of
+our project. This is not a package reference but a <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/extensibility#per-project-based-extensibility">project tool</a>, so we will need
+to add the tool to our csproj manually. Right click on the <code>Sample.Api</code> project
+in the solution explorer and paste the following snippet somewhere under the
+<code>&lt;Project&gt;</code> node.</p>
+<pre><code class="language-xml">&lt;ItemGroup&gt;
+  &lt;DotNetCliToolReference Include=&quot;Swashbuckle.AspNetCore.Cli&quot; Version=&quot;3.0.0-beta1&quot; /&gt;
+&lt;/ItemGroup&gt;
+</code></pre>
+<h3 id="the-controller">The controller</h3>
+<p>Open up <code>Controllers/ValuesController.cs</code> and replace the content with the following
+code:</p>
+<pre><code class="language-csharp">using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+
+namespace Sample.Api.Controllers
+{
+    [ApiController]
+    [Route(&quot;api/[controller]&quot;)]
+    public class ValuesController : ControllerBase
+    {
+        [HttpGet]
+        [ProducesResponseType(typeof(ICollection&lt;string&gt;), 200)]
+        [SwaggerOperation(OperationId = &quot;Values_GetAll&quot;)]
+        public ActionResult&lt;ICollection&lt;string&gt;&gt; Get()
+        {
+            return new string[] { &quot;foo&quot;, &quot;bar&quot; };
+        }
+    }
+}
+</code></pre>
+<p>As you can see we have a method that returns a collection of string. We've decorated
+the method with two additional attributes that tells <code>Swashbuckle</code> that this method
+will return a collection of strings if the HTTP response code is <code>200</code>. We're also
+setting an <a href="">Swagger operation ID</a> for the method that will be used when we generate
+our client.</p>
+<h3 id="wiring-up-the-api">Wiring up the API</h3>
+<p>We now have a controller that's decorated with the necessary attributes for <code>Swashbuckle</code>
+to generate a Swagger specification from it. We now have to wire everything up in the
+<code>Startup.cs</code> file.</p>
+<p>In the <code>ConfigureServices</code> method, add the following code that will tell <code>Swashbuckle</code> that
+we've annotated our controllers with annotations, and provide some metadata for the API.</p>
+<pre><code class="language-csharp">services.AddSwaggerGen(c =&gt;
+{
+    c.EnableAnnotations();
+    c.SwaggerDoc(&quot;v1&quot;, new Info
+    {
+        Title = &quot;Sample API&quot;,
+        Version = &quot;v1&quot;
+    });
+});
+</code></pre>
+<p>We now have to add the <code>Swashbuckle</code> middleware to our application pipeline which we do by
+adding the following code last in the <code>Configure</code> method. You can also (optionally) add
+the UI, but this is not required for what we're trying to achieve.</p>
+<pre><code class="language-csharp">app.UseSwagger();
+
+// Optional
+app.UseSwaggerUI(c =&gt;
+{
+    c.SwaggerEndpoint(&quot;/swagger/v1/swagger.json&quot;, &quot;Sample API&quot;);
+});
+</code></pre>
+<p>If you run the project and navigate to <code>/swagger/v1/swagger.json</code>, you will see
+the generated Swagger specification that represents our API.</p>
+<h3 id="modifying-the-client-project">Modifying the client project</h3>
+<p>The last thing we need to do before actually generating a client is to add a
+reference to the <code>Microsoft.Rest.ClientRuntime</code> NuGet package in the <code>Sample.Client</code> project.
+This package contains everything that a generated <code>AutoRest</code> client requires to work.</p>
+<h2 id="generating-the-client-code">Generating the client code</h2>
+<p>Now we want to start generating the client code, but we don't want to get the Swagger
+document by starting the API and retrieving it. It's absolutely possible but will be hard
+to automate.</p>
+<p>It's here the <code>Swashbuckle.AspNetCore.Cli</code> package comes into play.<br />
+What this package does is to allow to generate the Swagger document from a built assembly
+instead of invoking the Swagger endpoint of our API project.</p>
+<p>What we need to do now is:</p>
 <ol>
-<li>Clean up old artifacts.</li>
-<li>Build the code.</li>
-<li>Run unit tests.</li>
-<li>Package generated artifacts.</li>
+<li>Build the Sample.API project.</li>
+<li>Generate the Swagger definition from the built assembly.</li>
+<li>Generate the client from the Swagger definition using <code>AutoRest</code>.</li>
 </ol>
-<p>A build script like that could look something like this.</p>
-<pre><code>var target = Argument&lt;string&gt;(&quot;target&quot;, &quot;Package&quot;);
-var config = Argument&lt;string&gt;(&quot;config&quot;, &quot;Release&quot;);
+<p>Like I mentioned before, we're going to use PowerShell to do this, so go ahead and create
+a <code>Generate.ps1</code> file in the root of our project structure. The file should look like following:</p>
+<pre><code class="language-powershell">Set-Location src
 
-Task(&quot;Clean&quot;)
-    .Does(() =&gt;
-{
-    // Clean directories.
-    CleanDirectory(&quot;./output&quot;);
-    CleanDirectory(&quot;./output/bin&quot;);
-    CleanDirectories(&quot;./src/**/bin/&quot; + config);
-});
+# Build project.
+dotnet build
 
-Task(&quot;Build&quot;)
-    .IsDependentOn(&quot;Clean&quot;)
-    .Does(() =&gt;
-{
-    // Build the solution using MSBuild.
-    MSBuild(&quot;./src/Project.sln&quot;, settings =&gt; 
-        settings.SetConfiguration(config));     
-});
+# Create the Swagger file from the API assembly.
+Set-Location Sample.Api
+dotnet swagger &quot;tofile&quot; --output &quot;../../res/swagger.json&quot; &quot;../Sample.Api/bin/Debug/netcoreapp2.1/Sample.Api.dll&quot; v1
+Set-Location ..
 
-Task(&quot;RunUnitTests&quot;)
-    .IsDependentOn(&quot;Build&quot;)
-    .Does(() =&gt;
-{
-    // Run xUnit tests.
-    XUnit(&quot;./src/**/bin/&quot; + config + &quot;/*.Tests.dll&quot;);
-});
+# Clear the previously generated code.
+Remove-Item &quot;Sample.Client/Generated&quot; -Force -Recurse
 
-Task(&quot;CopyFiles&quot;)
-    .IsDependentOn(&quot;RunUnitTests&quot;)
-    .Does(() =&gt;
-{
-    var path = &quot;./src/Project/bin/&quot; + configuration;    
-    var files = GetFiles(path + &quot;/**/*.dll&quot;) 
-        + GetFiles(path + &quot;/**/*.exe&quot;);
+# Generate a C# client from the Swagger definition and
+# override the namespace and the client name.
+autorest --input-file=&quot;../res/swagger.json&quot; `
+         --output-folder=&quot;Sample.Client/Generated&quot; `
+         --namespace=&quot;Sample.Client&quot; `
+         --override-client-name=&quot;SampleClient&quot; `
+         --csharp
 
-    // Copy all exe and dll files to the output directory.
-    CopyFiles(files, &quot;./output/bin&quot;);
-});    
-
-Task(&quot;Package&quot;)
-    .IsDependentOn(&quot;RunUnitTests&quot;)
-    .Does(() =&gt;
-{
-    // Zip all files in the bin directory.
-    Zip(&quot;./output/bin&quot;, &quot;./output/build.zip&quot;);
-});
-
-RunTarget(target);
+# Reset the location.
+Set-Location ..
 </code></pre>
-<p>To run our build script we invoke <code>Cake.exe</code> with the script file as the first argument, and (optionally) the name of our target task as the second argument. We can also tell Cake how much information we're interested in with the built in <code>verbosity</code> parameter, which is very useful when debugging a script.</p>
-<pre><code>C:&gt; Cake.exe build.cake -target=Package -verbosity=diagnostic
-</code></pre>
-<p>This is just an example. Much more functionality is already implemented such as support for <code>MSBuild</code>, <code>MSTest</code>, <code>xUnit</code>, <code>NUnit</code>, <code>ILMerge</code>, <code>NuGet pack/restore</code> and the most common file system operations such as <code>file/folder manipulation</code> and <code>globbing</code>.</p>
-<p>To see an actual build script in action, fork or clone the <a href="https://github.com/cake-build/cake">GitHub repository</a> and run <code>build.cmd</code> which will download Cake from NuGet and run the <code>build.cake</code> script.</p>
-<h2 id="what-now">What now?</h2>
-<p>This was only supposed to be an introduction to Cake but I will blog more about this in the near future.</p>
-<p>If you find this project interesting and want to help or you just have opinions about stuff, you can check out the full repository at <a href="https://github.com/cake-build/cake">https://github.com/cake-build/cake</a>.</p>
+<p>By running this script you should find a folder called <code>Generated</code> in the Client project
+containing the API client.</p>
+<p>All classes are partial (as well as some methods) so if you need to inject your own logic
+or change some behavior (such as authentication), you have the possibility to do so.</p>
+<h2 id="closing-up">Closing up</h2>
+<p>This tutorial just goes through the basics of how to generate an API client, but there is
+a myriad of other options that you can use to customize the generated client to your
+exact needs. I've personally haven't encountered a single scenario that couldn't be solved
+by one of the extensibility points in the generated code.</p>
+<p>I also recommend you to always commit the generated Swagger file as part of your repository.
+That way you always have a way to quickly regenerate the client if you manage to break something.</p>
+<p>You can find the source code to this blog post at
+<a href="https://github.com/patriksvensson/autorest-example">https://github.com/patriksvensson/autorest-example</a></p>
 
 
 
