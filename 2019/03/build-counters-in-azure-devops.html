@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Patrik Svensson - C#</title>
+        <title>Patrik Svensson - Using build counters in Azure DevOps</title>
         <meta name="description" content="Patrik Svensson" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="Patrik Svensson" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Patrik Svensson - C#" />
+        <meta property="og:title" content="Patrik Svensson - Using build counters in Azure DevOps" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://patriksvensson.se/tags/c%23" />
+        <meta property="og:url" content="http://patriksvensson.se/2019/03/build-counters-in-azure-devops" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="/assets/js/jquery.min.js"></script>
@@ -86,9 +86,17 @@
                         <div class="container">
                                 <div class="row">
                                         <div class="col-md-12">
-<div class="site-heading">
-    <h1>C#</h1>
-</div>                                            </div>
+
+    
+<div class="post-heading">
+    <h1>Using build counters in Azure DevOps</h1>
+    <div class="meta">        
+Published on 13 March 2019<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/azure-devops" class="btn btn-default btn-xs">Azure DevOps</a>
+        </div>     
+</div>
+                                        </div>
                                 </div>
                         </div>
                 </header>
@@ -97,115 +105,32 @@
                 <div class="container">
                         <div class="row">
                                 <div id="content" class="col-md-12">
-                                        <div class="container-sm-height">
-    <div class="row row-sm-height">
-        <div class="col-sm-8 right-border col-sm-height">
-                    <div class="post-list">
-            <a href="/2018/10/generating-api-clients-using-autorest">
-                <h3 class="post-title">Generating API clients using AutoRest</h3>
-            </a>
-            <p class="post-meta">Posted on 02 October 2018</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/2018/04/an-introduction-to-spectre-cli">
-                <h3 class="post-title">An introduction to Spectre.Cli</h3>
-            </a>
-            <p class="post-meta">Posted on 10 April 2018</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/2017/12/binding-to-a-richtextbox-in-wpf">
-                <h3 class="post-title">Binding to a RichTextBox in WPF</h3>
-            </a>
-            <p class="post-meta">Posted on 11 December 2017</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/2017/12/conditionals-in-xaml">
-                <h3 class="post-title">Conditionals in XAML</h3>
-            </a>
-            <p class="post-meta">Posted on 03 December 2017</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/2017/11/using-embedded-resources-in-xunit-tests">
-                <h3 class="post-title">Using embedded resources in xUnit tests</h3>
-            </a>
-            <p class="post-meta">Posted on 11 November 2017</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/2017/08/never-mutate-state-in-a-debug-assert-call">
-                <h3 class="post-title">Never mutate state in a Debug.Assert call</h3>
-            </a>
-            <p class="post-meta">Posted on 02 August 2017</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/2014/11/cake-and-appveyor-integration">
-                <h3 class="post-title">Cake and AppVeyor integration</h3>
-            </a>
-            <p class="post-meta">Posted on 23 November 2014</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/2014/08/script-aliases">
-                <h3 class="post-title">Script aliases</h3>
-            </a>
-            <p class="post-meta">Posted on 19 August 2014</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/2014/07/its-not-a-party-without-cake">
-                <h3 class="post-title">It&#x27;s not a party without Cake</h3>
-            </a>
-            <p class="post-meta">Posted on 18 July 2014</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/2013/08/culture-agnostic-string-comparisons">
-                <h3 class="post-title">Culture agnostic string comparisons</h3>
-            </a>
-            <p class="post-meta">Posted on 22 August 2013</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/2013/08/how-to-dynamically-add-attributes-to-a-class-with-castle-core">
-                <h3 class="post-title">How to dynamically add attributes to a class with Castle.Core</h3>
-            </a>
-            <p class="post-meta">Posted on 15 August 2013</p>      
-        </div>   
+                                        
+
+<p>We recently migrated some builds from TeamCity to Azure DevOps at my client, and couldn't
+find a feature analog to TeamCity's <code>%build.counter%</code> which we've been using
+to get automatically incremented version numbers for artifacts.</p>
+<!--excerpt-->
+<p>Since we couldn't find the corresponding feature in Azure DevOps we settled on using the
+<code>$(Build.BuildId)</code> variable which is the canonical ID for a build. Not exactly ideal
+but it solved the immediate issue.</p>
+<p>Today I found a way of accomplishing the same thing in Azure DevOps, but sadly it's not
+properly documented even if it's <a href="https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&amp;tabs=yaml%2Cbatch#set-variables-using-expressions">briefly mentioned</a> in the official documentation.
+The following lines in your <code>azure-devops.yml</code> will set the build number to an
+incrementing number that's scoped to the build definition.</p>
+<pre><code class="language-yml">name: 1.0.$(myBuildCounter)
+variables:
+  myBuildCounter: $[counter('buildCounter',1)]
+</code></pre>
+<p>The example above will create a build definition counter called <code>buildCounter</code> that
+will be initialized to the value <code>1</code>. This value will be incremented for
+each new build. If you ever want to reset or reseed this value you'll have to use the
+<a href="https://docs.microsoft.com/en-us/rest/api/azure/devops/build/definitions?view=vsts-rest-tfs-4.1">Azure DevOps HTTP API</a>.</p>
+<p>If you have an option, consider using something like <a href="https://gitversion.readthedocs.io/en/latest/">GitVersion</a>
+or <a href="https://github.com/adamralph/minver">MinVer</a> to dynamically calculate a version number from a git repository.</p>
 
 
-            <nav>
-                <ul class="pager">
-                    <li class="previous">                
-                    </li>
-                    <li class="next">
-                    </li>
-                </ul>
-            </nav>
-            <hr class="visible-xs-block" />
-        </div>
-		
-        <div class="col-sm-4 col-sm-height">
-                <a role="button" href="/tags/net" class="btn btn-default btn-xs">.NET (12)</a>
-                <a role="button" href="/tags/c%23" class="btn btn-primary btn-xs">C# (11)</a>
-                <a role="button" href="/tags/cake" class="btn btn-default btn-xs">Cake (3)</a>
-                <a role="button" href="/tags/wpf" class="btn btn-default btn-xs">WPF (2)</a>
-                <a role="button" href="/tags/azure-devops" class="btn btn-default btn-xs">Azure DevOps (1)</a>
-                <a role="button" href="/tags/autorest" class="btn btn-default btn-xs">AutoRest (1)</a>
-                <a role="button" href="/tags/openapi" class="btn btn-default btn-xs">OpenAPI (1)</a>
-                <a role="button" href="/tags/swagger" class="btn btn-default btn-xs">Swagger (1)</a>
-                <a role="button" href="/tags/cli" class="btn btn-default btn-xs">CLI (1)</a>
-                <a role="button" href="/tags/rust" class="btn btn-default btn-xs">Rust (1)</a>
-                <a role="button" href="/tags/debugging" class="btn btn-default btn-xs">Debugging (1)</a>
-                <a role="button" href="/tags/llvm" class="btn btn-default btn-xs">LLVM (1)</a>
-                <a role="button" href="/tags/lldb" class="btn btn-default btn-xs">LLDB (1)</a>
-                <a role="button" href="/tags/msi" class="btn btn-default btn-xs">MSI (1)</a>
-                <a role="button" href="/tags/wix" class="btn btn-default btn-xs">WiX (1)</a>
-                <a role="button" href="/tags/xunit" class="btn btn-default btn-xs">xUnit (1)</a>
-                <a role="button" href="/tags/azure" class="btn btn-default btn-xs">Azure (1)</a>
-                <a role="button" href="/tags/appveyor" class="btn btn-default btn-xs">AppVeyor (1)</a>
-                <a role="button" href="/tags/logging" class="btn btn-default btn-xs">Logging (1)</a>
-                <a role="button" href="/tags/teamcity" class="btn btn-default btn-xs">TeamCity (1)</a>
-                <a role="button" href="/tags/github" class="btn btn-default btn-xs">GitHub (1)</a>
-                <a role="button" href="/tags/c&#x2B;&#x2B;" class="btn btn-default btn-xs">C&#x2B;&#x2B; (1)</a>
-                <a role="button" href="/tags/unit-testing" class="btn btn-default btn-xs">Unit testing (1)</a>
-        </div>
-    </div>
-</div>
+
                                 </div>
                         </div>
                 </div>

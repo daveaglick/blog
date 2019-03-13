@@ -4,9 +4,16 @@
 		<title>Patrik Svensson</title>
 		<link>http://patriksvensson.se/</link>
 		<description>Patrik Svensson</description>
-		<copyright>2018</copyright>
-		<pubDate>Tue, 02 Oct 2018 10:38:06 GMT</pubDate>
-		<lastBuildDate>Tue, 02 Oct 2018 10:38:06 GMT</lastBuildDate>
+		<copyright>2019</copyright>
+		<pubDate>Wed, 13 Mar 2019 23:32:57 GMT</pubDate>
+		<lastBuildDate>Wed, 13 Mar 2019 23:32:57 GMT</lastBuildDate>
+		<item>
+			<title>Using build counters in Azure DevOps</title>
+			<link>http://patriksvensson.se/2019/03/build-counters-in-azure-devops</link>
+			<description>Patrik Svensson</description>
+			<guid>http://patriksvensson.se/2019/03/build-counters-in-azure-devops</guid>
+			<pubDate>Wed, 13 Mar 2019 00:00:00 GMT</pubDate>
+		</item>
 		<item>
 			<title>Generating API clients using AutoRest</title>
 			<link>http://patriksvensson.se/2018/10/generating-api-clients-using-autorest</link>

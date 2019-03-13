@@ -3,9 +3,16 @@
 	<link rel="self" href="http://patriksvensson.se/" />
 	<id>http://patriksvensson.se/</id>
 	<title>Patrik Svensson</title>
-	<rights>2018</rights>
-	<updated>2018-10-02T10:38:06Z</updated>
+	<rights>2019</rights>
+	<updated>2019-03-13T23:32:57Z</updated>
 	<subtitle>Patrik Svensson</subtitle>
+	<entry>
+		<link href="http://patriksvensson.se/2019/03/build-counters-in-azure-devops" />
+		<id>http://patriksvensson.se/2019/03/build-counters-in-azure-devops</id>
+		<title>Using build counters in Azure DevOps</title>
+		<updated>2019-03-13T00:00:00Z</updated>
+		<summary>Patrik Svensson</summary>
+	</entry>
 	<entry>
 		<link href="http://patriksvensson.se/2018/10/generating-api-clients-using-autorest" />
 		<id>http://patriksvensson.se/2018/10/generating-api-clients-using-autorest</id>
